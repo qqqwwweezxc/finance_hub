@@ -1,23 +1,36 @@
 # ◈ FinanceHub
 
-**FinanceHub** — это современное веб-приложение для управления личными финансами, построенное на **Django**.  
-Проект помогает контролировать доходы, расходы, лимиты бюджета и цели накоплений через удобный dashboard с аналитикой и графиками.
+**FinanceHub** — современное веб-приложение для управления личными финансами, построенное на **Django**.
+
+Проект помогает контролировать доходы, расходы, лимиты бюджета и цели накоплений через удобный dashboard с аналитикой, графиками и современным UI.
+
+---
+
+## 🌍 Live Demo
+
+Проект задеплоен на Render:
+
+```txt
+https://finance-hub-00sk.onrender.com
+```
 
 ---
 
 ## 📌 О проекте
 
+FinanceHub — это личный финансовый кабинет, где пользователь может отслеживать свои деньги, анализировать расходы и контролировать финансовые цели.
 
-Приложение позволяет пользователю:
+Приложение позволяет:
 
-- отслеживать баланс;
+- отслеживать общий баланс;
 - добавлять доходы и расходы;
+- просматривать историю операций;
 - анализировать траты по категориям;
 - контролировать месячные лимиты;
 - создавать цели накоплений;
 - видеть прогресс целей;
 - получать поздравление при достижении цели;
-- управлять операциями через личный кабинет.
+- управлять финансами через личный dashboard.
 
 ---
 
@@ -46,26 +59,31 @@
 - добавлять расходы;
 - выбирать категории;
 - указывать описание операции;
-- фильтровать операции по типу и периоду;
+- фильтровать операции по типу;
+- фильтровать операции по периоду;
 - просматривать историю транзакций.
 
 ---
 
 ### 🎯 Цели накоплений
 
-В FinanceHub можно создавать цели, например:
+В FinanceHub можно создавать финансовые цели.
+
+Пример:
 
 ```txt
 Dyson до 21.07.2026 — 100%
 ```
 
-Когда цель достигает 100%, приложение автоматически удаляет её и показывает красивое поздравительное окно.
+Когда цель достигает **100%**, приложение автоматически удаляет её и показывает поздравительное окно.
 
 ---
 
 ### 🧾 Лимиты бюджета
 
-Пользователь может задавать лимиты по категориям:
+Пользователь может задавать лимиты по категориям.
+
+Пример:
 
 ```txt
 Развлечения: 100 / 500
@@ -84,7 +102,7 @@ Dyson до 21.07.2026 — 100%
 - вход;
 - выход;
 - личный dashboard для каждого пользователя;
-- защита данных пользователя.
+- защита пользовательских данных.
 
 ---
 
@@ -92,11 +110,12 @@ Dyson до 21.07.2026 — 100%
 
 ### Backend
 
-- Python
+- Python 3.12
 - Django 5
 - Django ORM
 - PostgreSQL
-- Class-Based Views / Function-Based Views
+- Class-Based Views
+- Function-Based Views
 - Django Templates
 
 ### Frontend
@@ -109,12 +128,15 @@ Dyson до 21.07.2026 — 100%
 - Glassmorphism UI
 - Responsive Design
 
-### DevOps
+### DevOps / Deploy
 
 - Docker
 - Docker Compose
+- Gunicorn
+- WhiteNoise
+- Render
+- Render PostgreSQL
 - `.env` конфигурация
-- PostgreSQL container
 
 ### Security / Utils
 
@@ -136,6 +158,8 @@ django-csp==3.8
 django-widget-tweaks==1.5.0
 python-dotenv==1.2.2
 psycopg[binary]>=3.1.8
+gunicorn
+whitenoise
 ```
 
 ---
@@ -182,6 +206,7 @@ FinanceHub/
 ├── docker-compose.yml
 ├── .dockerignore
 ├── .gitignore
+├── .env
 ├── requirements.txt
 ├── manage.py
 └── README.md
@@ -194,8 +219,8 @@ FinanceHub/
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/FinanceHub.git
-cd FinanceHub
+git clone https://github.com/YOUR_USERNAME/finance_hub.git
+cd finance_hub
 ```
 
 ---
@@ -232,9 +257,6 @@ pip install -r requirements.txt
 
 ```env
 SECRET_KEY=your_secret_key
-DEBUG=True
-
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
 DB_NAME=financehub
 DB_USER=financehub_user
@@ -248,7 +270,6 @@ DB_PORT=5432
 ### 5. Применить миграции
 
 ```bash
-python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -278,7 +299,7 @@ http://127.0.0.1:8000/
 
 ## 🐳 Запуск через Docker
 
-Проект можно запустить полностью через Docker: Django + PostgreSQL.
+Проект можно запустить локально через Docker: Django + PostgreSQL.
 
 ### 1. Создать `.env`
 
@@ -286,9 +307,6 @@ http://127.0.0.1:8000/
 
 ```env
 SECRET_KEY=your_secret_key
-DEBUG=True
-
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
 DB_NAME=financehub
 DB_USER=financehub_user
@@ -347,21 +365,19 @@ docker compose down -v
 
 ## 🔐 Переменные окружения
 
-В проекте используется `.env` файл.
+В проекте используется `.env`.
 
 Пример `.env.example`:
 
 ```env
 SECRET_KEY=your_secret_key_here
-DEBUG=True
-
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
 DB_NAME=financehub
 DB_USER=financehub_user
 DB_PASSWORD=change_me
 DB_HOST=db
 DB_PORT=5432
+
 ```
 
 Файл `.env` нельзя добавлять в GitHub.
@@ -371,6 +387,7 @@ DB_PORT=5432
 ```gitignore
 .env
 .venv/
+venv/
 __pycache__/
 *.pyc
 db.sqlite3
@@ -386,9 +403,12 @@ media/
 
 FinanceHub использует PostgreSQL в качестве основной базы данных.
 
-Настройки подключения берутся из `.env`:
+Пример настройки базы данных в `settings.py`:
 
 ```python
+import os
+
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -420,13 +440,48 @@ DATABASES = {
 550 EUR
 ```
 
-Также dashboard показывает:
+Dashboard также показывает:
 
 - траты текущего месяца;
-- лимиты;
+- лимиты бюджета;
 - цели накоплений;
 - динамику по месяцам;
 - визуальные графики через Chart.js.
+
+---
+
+## 🧪 Полезные команды
+
+### Django
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+python manage.py collectstatic
+```
+
+---
+
+### Docker
+
+```bash
+docker compose up --build
+docker compose down
+docker compose down -v
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+```
+
+---
+
+### Git
+
+```bash
+git add .
+git commit -m "Update project"
+git push origin main
+```
 
 ---
 
@@ -442,29 +497,9 @@ DATABASES = {
 - [ ] AI-рекомендации по расходам
 - [ ] Темная тема
 - [ ] Мультивалютность
-
----
-
-## 🧪 Полезные команды
-
-### Django
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-```
-
-### Docker
-
-```bash
-docker compose up --build
-docker compose down
-docker compose down -v
-docker compose exec web python manage.py createsuperuser
-docker compose exec web python manage.py migrate
-```
+- [ ] Улучшенная финансовая аналитика
+- [ ] Production logging
+- [ ] GitHub Actions CI/CD
 
 ---
 
@@ -472,7 +507,7 @@ docker compose exec web python manage.py migrate
 
 Разработчик: **Vitalii Burdash**
 
-Проект создан для практики Django, PostgreSQL, Docker и разработки полноценного финансового веб-приложения.
+Проект создан для практики Django, PostgreSQL, Docker, Render Deploy и разработки полноценного финансового веб-приложения.
 
 ---
 

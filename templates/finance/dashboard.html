@@ -1,0 +1,715 @@
+{% extends 'base.html' %}
+{% block title %}Сводка | FinanceHub{% endblock %}
+
+{% block content %}
+
+<style>
+:root{
+    --bg:#f5f7fb;
+    --card:#ffffffd8;
+    --border:rgba(255,255,255,.25);
+    --shadow:0 10px 35px rgba(15,23,42,.08);
+    --shadow-hover:0 20px 50px rgba(15,23,42,.12);
+
+    --primary:#4f46e5;
+    --success:#10b981;
+    --danger:#ef4444;
+    --info:#0ea5e9;
+
+    --text:#111827;
+    --muted:#6b7280;
+}
+
+body{
+    background:
+    radial-gradient(circle at top right,#dbeafe 0%,transparent 25%),
+    radial-gradient(circle at bottom left,#ede9fe 0%,transparent 30%),
+    var(--bg);
+}
+
+.dashboard-title{
+    font-weight:700;
+    letter-spacing:-0.5px;
+    color:var(--text);
+}
+
+.stat-card{
+    border:none !important;
+    border-radius:24px;
+    background:var(--card)!important;
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+
+    box-shadow:var(--shadow);
+    transition:.35s ease;
+    overflow:hidden;
+    position:relative;
+}
+
+.stat-card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-hover);
+}
+
+.stat-card::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    height:4px;
+    width:100%;
+    opacity:.9;
+}
+
+.border-primary::before{
+    background:linear-gradient(90deg,#4f46e5,#818cf8);
+}
+
+.border-success::before{
+    background:linear-gradient(90deg,#10b981,#34d399);
+}
+
+.border-danger::before{
+    background:linear-gradient(90deg,#ef4444,#fb7185);
+}
+
+.border-info::before{
+    background:linear-gradient(90deg,#06b6d4,#38bdf8);
+}
+
+.stat-card small{
+    color:var(--muted)!important;
+    letter-spacing:1px;
+    font-size:.72rem;
+}
+
+.stat-card h3{
+    color:var(--text);
+    font-size:1.8rem;
+}
+
+.btn-primary{
+    border:none;
+    border-radius:14px;
+    background:linear-gradient(135deg,#4f46e5,#6366f1);
+    padding:12px 18px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.btn-primary:hover{
+    transform:translateY(-2px);
+}
+
+.btn-outline-primary{
+    border-radius:12px;
+    border:1px solid rgba(79,70,229,.25);
+    color:var(--primary);
+    transition:.3s;
+}
+
+.btn-outline-primary:hover{
+    transform:scale(1.08);
+    background:var(--primary);
+}
+
+h5{
+    font-weight:700;
+    color:var(--text);
+}
+
+.progress{
+    height:10px !important;
+    border-radius:50px;
+    overflow:hidden;
+    background:#eef2ff;
+}
+
+.progress-bar{
+    border-radius:50px;
+}
+
+.edit-link{
+    opacity:.6;
+    transition:.3s;
+}
+
+.edit-link:hover{
+    opacity:1;
+    transform:scale(1.15);
+}
+
+.section-card{
+    padding:24px !important;
+}
+
+canvas{
+    padding:10px;
+}
+
+.delete-btn{
+    border:none;
+    background:transparent;
+    padding:0;
+    margin-left:2px;
+    opacity:.6;
+    transition:.3s;
+    line-height:1;
+}
+
+.delete-btn:hover{
+    opacity:1;
+    transform:scale(1.15);
+}
+
+.modal-content{
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(20px);
+    border:none;
+    border-radius:24px;
+    box-shadow:0 30px 80px rgba(15,23,42,.25);
+}
+
+.delete-modal-icon{
+    width:72px;
+    height:72px;
+    border-radius:50%;
+    background:#fee2e2;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto;
+    font-size:34px;
+}
+
+@media(max-width:768px){
+
+    .dashboard-title{
+        font-size:1.4rem;
+    }
+
+    .top-header{
+        gap:15px;
+        flex-direction:column;
+        align-items:flex-start!important;
+    }
+
+    .stat-card h3{
+        font-size:1.4rem;
+    }
+}
+</style>
+
+
+<div class="d-flex justify-content-between align-items-center mb-4 pb-2 top-header">
+
+    <div>
+        <h2 class="m-0 dashboard-title">
+            Финансовая аналитика
+        </h2>
+
+        <small class="text-muted">
+            Контроль расходов, доходов и финансовых целей
+        </small>
+    </div>
+
+    <a href="{% url 'finance:transaction_create' %}" class="btn btn-primary">
+        + Добавить операцию
+    </a>
+
+</div>
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card stat-card p-4 border-primary">
+            <small>Баланс</small>
+
+            <h3 class="my-2 fw-bold">
+                {{ total_balance }} {{ request.user.currency }}
+            </h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card p-4 border-success">
+            <small>Доход за месяц</small>
+
+            <h3 class="my-2 fw-bold text-success">
+                +{{ month_income }}
+            </h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card p-4 border-danger">
+            <small>Расход за месяц</small>
+
+            <h3 class="my-2 fw-bold text-danger">
+                -{{ month_expense }}
+            </h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card p-4 border-info">
+            <small>Средний чек</small>
+
+            <h3 class="my-2 fw-bold">
+                {{ avg_expanse|floatformat:1 }}
+            </h3>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row g-4">
+
+    <div class="col-lg-6">
+
+        <div class="card stat-card section-card mb-4">
+
+            <h5 class="mb-4">
+                Траты текущего месяца
+            </h5>
+
+            <div style="height:250px;">
+                <canvas id="catChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="card stat-card section-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h5 class="m-0">
+                    Лимиты
+                </h5>
+
+                <a href="{% url 'finance:budget-create' %}"
+                   class="btn btn-outline-primary btn-sm">
+                    +
+                </a>
+
+            </div>
+
+            {% if budgets %}
+
+                {% for b in budgets %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+
+                            <div class="d-flex align-items-center gap-2 fw-semibold">
+
+                                <span>
+                                    {{ b.category.name }}
+                                </span>
+
+                                <a href="{% url 'finance:budget-update' b.pk %}"
+                                   class="text-muted text-decoration-none edit-link">
+                                    ✏️
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="delete-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteBudget{{ b.id }}">
+                                    🗑️
+                                </button>
+
+                            </div>
+
+                            <span class="{% if b.is_exceeded %}text-danger{% endif %}">
+                                {{ b.current_spent|floatformat:0 }}
+                                /
+                                {{ b.limit_amount|floatformat:0 }}
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div class="progress-bar {% if b.is_exceeded %}bg-danger{% else %}bg-success{% endif %}"
+                                 style="width:{% widthratio b.current_spent b.limit_amount 100 %}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="text-muted">
+                    Лимиты не заданы.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="col-lg-6">
+
+        <div class="card stat-card section-card mb-4">
+
+            <h5 class="mb-4">
+                Динамика по месяцам
+            </h5>
+
+            <div style="height:250px;">
+                <canvas id="dynChart"></canvas>
+            </div>
+
+        </div>
+
+
+        <div class="card stat-card section-card">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h5 class="m-0">
+                    Цели накоплений
+                </h5>
+
+                <a href="{% url 'finance:savings-create' %}"
+                   class="btn btn-outline-primary btn-sm">
+                    +
+                </a>
+
+            </div>
+
+            {% if goals %}
+
+                {% for s in goals %}
+
+                    <div class="mb-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+
+                            <div class="d-flex align-items-center gap-2">
+
+                                <span class="fw-semibold">
+
+                                    {{ s.title }}
+
+                                    <small class="text-muted">
+                                        до {{ s.deadline|date:"d.m.Y" }}
+                                    </small>
+
+                                </span>
+
+                                <a href="{% url 'finance:savings-update' s.pk %}"
+                                   class="edit-link text-decoration-none">
+                                    ✏️
+                                </a>
+
+                                <button
+                                    type="button"
+                                    class="delete-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteGoal{{ s.id }}">
+                                    🗑️
+                                </button>
+
+                            </div>
+
+                            <span class="fw-semibold">
+                                {{ s.progress_percent }}%
+                            </span>
+
+                        </div>
+
+                        <div class="progress">
+
+                            <div class="progress-bar bg-info"
+                                 style="width:{{ s.progress_percent }}%">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p class="text-muted">
+                    Цели не установлены.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{% if budgets %}
+    {% for b in budgets %}
+
+        <div class="modal fade"
+             id="deleteBudget{{ b.id }}"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-body text-center p-5">
+
+                        <div class="delete-modal-icon">
+                            🗑️
+                        </div>
+
+                        <h4 class="mt-4 fw-bold">
+                            Удалить лимит?
+                        </h4>
+
+                        <p class="text-muted mt-2">
+
+                            Лимит
+                            <strong>{{ b.category.name }}</strong>
+                            будет удалён навсегда.
+
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+
+                            <button
+                                type="button"
+                                class="btn btn-light px-4"
+                                data-bs-dismiss="modal">
+                                Отмена
+                            </button>
+
+                            <form method="post"
+                                  action="{% url 'finance:budget_delete' b.id %}"
+                                  class="m-0">
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger px-4">
+                                    Удалить
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+{% endif %}
+
+
+{% if goals %}
+    {% for s in goals %}
+
+        <div class="modal fade"
+             id="deleteGoal{{ s.id }}"
+             tabindex="-1"
+             aria-hidden="true">
+
+            <div class="modal-dialog modal-dialog-centered">
+
+                <div class="modal-content">
+
+                    <div class="modal-body text-center p-5">
+
+                        <div class="delete-modal-icon">
+                            🗑️
+                        </div>
+
+                        <h4 class="mt-4 fw-bold">
+                            Удалить цель?
+                        </h4>
+
+                        <p class="text-muted mt-2">
+
+                            Цель
+                            <strong>{{ s.title }}</strong>
+                            будет удалена навсегда.
+
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+
+                            <button
+                                type="button"
+                                class="btn btn-light px-4"
+                                data-bs-dismiss="modal">
+                                Отмена
+                            </button>
+
+                            <form method="post"
+                                  action="{% url 'finance:goal_delete' s.id %}"
+                                  class="m-0">
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger px-4">
+                                    Удалить
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+{% endif %}
+{% if completed_goals %}
+
+<div class="modal fade"
+     id="completedGoalModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-body text-center p-5">
+
+                <div class="delete-modal-icon"
+                     style="background:#dcfce7;">
+
+                    🎉
+
+                </div>
+
+                <h4 class="mt-4 fw-bold">
+                    Поздравляем!
+                </h4>
+
+                <p class="text-muted mt-2">
+                    Вы достигли цели:
+
+                    <br>
+
+                    {% for goal in completed_goals %}
+                        <strong>{{ goal }}</strong>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <button
+                    type="button"
+                    class="btn btn-primary px-4 mt-3"
+                    data-bs-dismiss="modal">
+
+                    Отлично
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    {% if completed_goals %}
+        const completedModalEl = document.getElementById("completedGoalModal");
+
+        if (completedModalEl) {
+            const completedModal = new bootstrap.Modal(completedModalEl);
+            completedModal.show();
+        }
+    {% endif %}
+
+    fetch("{% url 'finance:api_chart_data' %}")
+        .then(r => r.json())
+        .then(data => {
+
+            new Chart(document.getElementById('catChart'), {
+                type:'doughnut',
+                data:{
+                    labels:data.categories.labels,
+                    datasets:[{
+                        data:data.categories.data,
+                        backgroundColor:[
+                            '#4f46e5',
+                            '#10b981',
+                            '#ef4444',
+                            '#0ea5e9',
+                            '#f59e0b',
+                            '#8b5cf6'
+                        ],
+                        borderWidth:0
+                    }]
+                },
+                options:{
+                    maintainAspectRatio:false,
+                    cutout:'70%'
+                }
+            });
+
+            new Chart(document.getElementById('dynChart'), {
+                type:'bar',
+                data:{
+                    labels:data.dynamics.labels,
+                    datasets:[
+                        {
+                            label:'Доходы',
+                            data:data.dynamics.income,
+                            backgroundColor:'#10b981',
+                            borderRadius:10
+                        },
+                        {
+                            label:'Расходы',
+                            data:data.dynamics.expense,
+                            backgroundColor:'#ef4444',
+                            borderRadius:10
+                        }
+                    ]
+                },
+                options:{
+                    maintainAspectRatio:false
+                }
+            });
+
+        });
+
+});
+</script>
+{% endblock %}

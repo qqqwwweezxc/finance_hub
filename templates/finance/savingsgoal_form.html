@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% block title %}{% if form.instance.pk %}Редактирование цели{% else %}Новая цель{% endif %} | FinanceHub{% endblock %}
+
+{% block content %}
+
+<style>
+
+:root{
+    --primary:#4f46e5;
+    --success:#10b981;
+    --bg:#f5f7fb;
+    --text:#111827;
+    --muted:#6b7280;
+}
+
+.goal-wrapper{
+    display:flex;
+    justify-content:center;
+    padding-top:40px;
+    padding-bottom:40px;
+}
+
+.goal-card{
+    width:100%;
+    max-width:520px;
+
+    border:none;
+    border-radius:28px;
+
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(18px);
+
+    box-shadow:0 20px 60px rgba(0,0,0,.08);
+
+    padding:32px;
+
+    transition:.4s;
+}
+
+.goal-card:hover{
+    transform:translateY(-6px);
+}
+
+.hero{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.hero-icon{
+    font-size:2.5rem;
+    width:80px;
+    height:80px;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#4f46e5,#818cf8);
+
+    color:white;
+
+    box-shadow:0 10px 30px rgba(79,70,229,.25);
+}
+
+.hero h4{
+    font-weight:800;
+    margin-top:12px;
+    color:var(--text);
+}
+
+.hero p{
+    color:var(--muted);
+    font-size:.9rem;
+}
+
+.form-label{
+    font-size:.72rem;
+    letter-spacing:1px;
+    font-weight:700;
+    color:var(--muted);
+}
+
+.form-control{
+    border-radius:14px !important;
+    border:1px solid rgba(0,0,0,.08);
+    padding:.75rem 1rem;
+    transition:.3s;
+}
+
+.form-control:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 .25rem rgba(79,70,229,.15);
+}
+
+.input-group-text{
+    border-radius:14px;
+    background:#f8fafc;
+    border:none;
+    color:var(--muted);
+}
+
+.btn-success{
+    border:none;
+    border-radius:14px;
+    padding:12px;
+    font-weight:700;
+
+    background:linear-gradient(135deg,#10b981,#34d399);
+
+    transition:.3s;
+}
+
+.btn-success:hover{
+    transform:translateY(-2px);
+}
+
+.btn-link{
+    text-decoration:none;
+}
+
+.error{
+    font-size:.85rem;
+    color:#ef4444;
+}
+
+@media(max-width:768px){
+    .goal-card{
+        padding:22px;
+    }
+
+    .hero-icon{
+        width:65px;
+        height:65px;
+        font-size:1.8rem;
+    }
+}
+
+</style>
+
+
+<div class="goal-wrapper">
+
+<div class="goal-card">
+
+<div class="hero">
+
+<div class="hero-icon">
+🚀
+</div>
+
+<h4>
+{% if form.instance.pk %}
+Редактировать цель накопления
+{% else %}
+На что копим?
+{% endif %}
+</h4>
+
+<p>
+Визуализируйте свою цель и достигайте её быстрее
+</p>
+
+</div>
+
+
+<form method="post">
+{% csrf_token %}
+
+<div class="mb-3">
+
+<label class="form-label">
+НАЗВАНИЕ ЦЕЛИ
+</label>
+
+{{ form.title }}
+
+{% for error in form.title.errors %}
+<div class="error mt-1">
+{{ error }}
+</div>
+{% endfor %}
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">
+ЦЕЛЕВАЯ СУММА
+</label>
+
+<div class="input-group">
+
+
+
+{{ form.target_amount }}
+
+<span class="input-group-text fw-bold">
+{{ request.user.currency }}
+</span>
+
+</div>
+
+{% for error in form.target_amount.errors %}
+<div class="error mt-1">
+{{ error }}
+</div>
+{% endfor %}
+
+</div>
+
+
+<div class="mb-3">
+
+<label class="form-label">
+УЖЕ НАКОПЛЕНО
+</label>
+
+<div class="input-group">
+
+
+
+{{ form.current_amount }}
+
+<span class="input-group-text fw-bold">
+{{ request.user.currency }}
+</span>
+
+</div>
+
+{% for error in form.current_amount.errors %}
+<div class="error mt-1">
+{{ error }}
+</div>
+{% endfor %}
+
+</div>
+
+
+<div class="mb-4">
+
+<label class="form-label">
+ДЕДЛАЙН
+</label>
+
+<div class="input-group">
+
+
+{{ form.deadline }}
+
+</div>
+
+{% for error in form.deadline.errors %}
+<div class="error mt-1">
+{{ error }}
+</div>
+{% endfor %}
+
+</div>
+
+
+<div class="d-grid gap-2">
+
+<button type="submit" class="btn btn-success">
+
+{% if form.instance.pk %}
+Сохранить изменения
+{% else %}
+Запустить цель
+{% endif %}
+
+</button>
+
+
+<a href="{% url 'finance:dashboard' %}" class="btn btn-link text-muted">
+
+Отмена
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

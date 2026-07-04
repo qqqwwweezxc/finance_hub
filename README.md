@@ -145,6 +145,7 @@ Dyson до 21.07.2026 — 100%
 - `django-csp`
 - `django-widget-tweaks`
 - `psycopg`
+- `dj-database-url`
 
 ---
 
@@ -158,6 +159,7 @@ django-csp==3.8
 django-widget-tweaks==1.5.0
 python-dotenv==1.2.2
 psycopg[binary]>=3.1.8
+dj-database-url
 gunicorn
 whitenoise
 ```
@@ -206,7 +208,7 @@ FinanceHub/
 ├── docker-compose.yml
 ├── .dockerignore
 ├── .gitignore
-├── .env
+├── .env.example
 ├── requirements.txt
 ├── manage.py
 └── README.md
@@ -257,6 +259,10 @@ pip install -r requirements.txt
 
 ```env
 SECRET_KEY=your_secret_key
+DEBUG=True
+
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
 
 DB_NAME=financehub
 DB_USER=financehub_user
@@ -307,6 +313,10 @@ http://127.0.0.1:8000/
 
 ```env
 SECRET_KEY=your_secret_key
+DEBUG=True
+
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
 
 DB_NAME=financehub
 DB_USER=financehub_user
@@ -363,6 +373,74 @@ docker compose down -v
 
 ---
 
+## 🚀 Deploy на Render
+
+Проект задеплоен на Render как **Docker Web Service**.
+
+Для production используется:
+
+- Docker;
+- Gunicorn;
+- Render PostgreSQL;
+- переменная окружения `DATABASE_URL`;
+- переменная окружения `PORT`, которую автоматически задаёт Render.
+
+---
+
+### Render Environment Variables
+
+В Render Web Service нужно добавить переменные:
+
+```env
+SECRET_KEY=your_production_secret_key
+DEBUG=False
+
+ALLOWED_HOSTS=finance-hub-00sk.onrender.com
+CSRF_TRUSTED_ORIGINS=https://finance-hub-00sk.onrender.com
+
+DATABASE_URL=your_render_postgresql_internal_database_url
+```
+
+Важно:
+
+```env
+DATABASE_URL=...
+```
+
+На Render **не используется**:
+
+```env
+DB_HOST=db
+```
+
+`DB_HOST=db` работает только локально в Docker Compose.
+
+---
+
+### Dockerfile для Render
+
+Контейнер запускается через Gunicorn:
+
+```dockerfile
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"]
+```
+
+Render сам передаёт переменную окружения `PORT`.
+
+---
+
+### Pre-Deploy Command на Render
+
+В Render можно указать:
+
+```bash
+python manage.py migrate && python manage.py collectstatic --noinput
+```
+
+Эта команда применяет миграции и собирает static files перед запуском приложения.
+
+---
+
 ## 🔐 Переменные окружения
 
 В проекте используется `.env`.
@@ -371,6 +449,10 @@ docker compose down -v
 
 ```env
 SECRET_KEY=your_secret_key_here
+DEBUG=True
+
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
 
 DB_NAME=financehub
 DB_USER=financehub_user
@@ -378,6 +460,7 @@ DB_PASSWORD=change_me
 DB_HOST=db
 DB_PORT=5432
 
+DATABASE_URL=
 ```
 
 Файл `.env` нельзя добавлять в GitHub.
@@ -403,22 +486,41 @@ media/
 
 FinanceHub использует PostgreSQL в качестве основной базы данных.
 
+Локально через Docker используется:
+
+```env
+DB_HOST=db
+```
+
+На Render используется:
+
+```env
+DATABASE_URL=...
+```
+
 Пример настройки базы данных в `settings.py`:
 
 ```python
 import os
+import dj_database_url
 
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+        }
+    }
 ```
 
 ---

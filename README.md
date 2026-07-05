@@ -1,214 +1,116 @@
-# ◈ FinanceHub
+# FinanceHub
 
-**FinanceHub** — современное веб-приложение для управления личными финансами, построенное на **Django**.
+FinanceHub — это веб-приложение для управления личными финансами, созданное на Django.
 
-Проект помогает контролировать доходы, расходы, лимиты бюджета и цели накоплений через удобный dashboard с аналитикой, графиками и современным UI.
+Проект позволяет пользователю вести учёт доходов и расходов, анализировать финансовую активность, устанавливать лимиты по категориям, создавать цели накоплений и получать умные финансовые инсайты на основе своих операций.
 
 ---
 
-## 🌍 Live Demo
+## Live Demo
 
-Проект задеплоен на Render:
-
-```txt
 https://finance-hub-00sk.onrender.com
-```
 
 ---
 
-## 📌 О проекте
+## Основные возможности
 
-FinanceHub — это личный финансовый кабинет, где пользователь может отслеживать свои деньги, анализировать расходы и контролировать финансовые цели.
-
-Приложение позволяет:
-
-- отслеживать общий баланс;
-- добавлять доходы и расходы;
-- просматривать историю операций;
-- анализировать траты по категориям;
-- контролировать месячные лимиты;
-- создавать цели накоплений;
-- видеть прогресс целей;
-- получать поздравление при достижении цели;
-- управлять финансами через личный dashboard.
-
----
-
-## ✨ Основные возможности
-
-### 📊 Dashboard
-
-На главной панели отображается:
-
-- общий баланс;
-- доход за текущий месяц;
-- расход за текущий месяц;
-- средний чек;
-- график расходов по категориям;
-- динамика доходов и расходов по месяцам;
-- лимиты бюджета;
-- цели накоплений.
+- Регистрация и авторизация пользователей
+- Персональный dashboard
+- Добавление доходов и расходов
+- Категории операций
+- Финансовая статистика за месяц
+- Графики доходов и расходов
+- Диаграмма расходов по категориям
+- Лимиты бюджета по категориям
+- Цели накоплений
+- Автоматическое удаление выполненных целей
+- Модальное поздравление при достижении цели
+- Финансовые инсайты
+- Адаптивный современный интерфейс
+- PostgreSQL база данных
+- Docker-контейнеризация
+- Деплой на Render
 
 ---
 
-### 💸 Финансовые операции
+## Финансовые инсайты
 
-Пользователь может:
+На dashboard добавлен блок умной аналитики.
 
-- добавлять доходы;
-- добавлять расходы;
-- выбирать категории;
-- указывать описание операции;
-- фильтровать операции по типу;
-- фильтровать операции по периоду;
-- просматривать историю транзакций.
+Приложение анализирует операции пользователя и показывает полезные подсказки:
 
----
-
-### 🎯 Цели накоплений
-
-В FinanceHub можно создавать финансовые цели.
+- положительный или отрицательный баланс месяца;
+- рост или снижение расходов по сравнению с прошлым месяцем;
+- самую затратную категорию;
+- превышенные лимиты;
+- почти достигнутые цели накоплений.
 
 Пример:
 
-```txt
-Dyson до 21.07.2026 — 100%
+```text
+Положительный баланс месяца
+Доходы превышают расходы на 400.00 EUR.
+
+Самая затратная категория
+Жилье — 1000.00 EUR.
+
+Лимит превышен
+Транспорт: 600 / 500 EUR.
 ```
 
-Когда цель достигает **100%**, приложение автоматически удаляет её и показывает поздравительное окно.
-
 ---
 
-### 🧾 Лимиты бюджета
+## Технологии
 
-Пользователь может задавать лимиты по категориям.
-
-Пример:
-
-```txt
-Развлечения: 100 / 500
-Жилье: 1000 / 1500
-```
-
-Если лимит превышен, прогресс-бар меняет цвет и визуально показывает проблему.
-
----
-
-### 🔐 Авторизация
-
-В проекте реализована система пользователей:
-
-- регистрация;
-- вход;
-- выход;
-- личный dashboard для каждого пользователя;
-- защита пользовательских данных.
-
----
-
-## 🛠️ Технологии
-
-### Backend
-
-- Python 3.12
-- Django 5
-- Django ORM
+- Python
+- Django
 - PostgreSQL
-- Class-Based Views
-- Function-Based Views
-- Django Templates
-
-### Frontend
-
-- HTML5
-- CSS3
+- Django ORM
 - Bootstrap 5
-- JavaScript
 - Chart.js
-- Glassmorphism UI
-- Responsive Design
-
-### DevOps / Deploy
-
+- HTML / CSS
 - Docker
-- Docker Compose
 - Gunicorn
 - WhiteNoise
 - Render
-- Render PostgreSQL
-- `.env` конфигурация
-
-### Security / Utils
-
-- `python-dotenv`
-- `django-axes`
-- `django-csp`
-- `django-widget-tweaks`
-- `psycopg`
-- `dj-database-url`
 
 ---
 
-## 📦 Requirements
+## Структура проекта
 
-```txt
-Django>=5.0,<5.1
-Pillow>=10.2.0
-django-axes==6.3.0
-django-csp==3.8
-django-widget-tweaks==1.5.0
-python-dotenv==1.2.2
-psycopg[binary]>=3.1.8
-dj-database-url
-gunicorn
-whitenoise
-```
-
----
-
-## 📁 Структура проекта
-
-```bash
+```text
 FinanceHub/
 │
 ├── apps/
 │   ├── finance/
-│   │   ├── migrations/
-│   │   ├── templates/
-│   │   ├── admin.py
-│   │   ├── apps.py
-│   │   ├── forms.py
 │   │   ├── models.py
+│   │   ├── views.py
+│   │   ├── forms.py
+│   │   ├── services.py
 │   │   ├── urls.py
-│   │   └── views.py
+│   │   └── migrations/
 │   │
 │   └── users/
-│       ├── migrations/
-│       ├── templates/
-│       ├── admin.py
-│       ├── apps.py
-│       ├── forms.py
 │       ├── models.py
+│       ├── views.py
+│       ├── forms.py
 │       ├── urls.py
-│       └── views.py
+│       └── migrations/
 │
 ├── config/
 │   ├── settings.py
 │   ├── urls.py
-│   ├── asgi.py
-│   └── wsgi.py
+│   ├── wsgi.py
+│   └── asgi.py
 │
 ├── templates/
 │   ├── base.html
-│   └── landing.html
+│   ├── finance/
+│   └── users/
 │
 ├── static/
-│
 ├── Dockerfile
 ├── docker-compose.yml
-├── .dockerignore
-├── .gitignore
-├── .env.example
 ├── requirements.txt
 ├── manage.py
 └── README.md
@@ -216,30 +118,32 @@ FinanceHub/
 
 ---
 
-## ⚙️ Установка без Docker
+## Установка и запуск локально
 
 ### 1. Клонировать репозиторий
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/finance_hub.git
-cd finance_hub
+git clone <your-repository-url>
+cd FinanceHub
 ```
 
 ---
 
 ### 2. Создать виртуальное окружение
 
-#### macOS / Linux
+```bash
+python -m venv .venv
+```
+
+Активировать окружение:
 
 ```bash
-python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-#### Windows
+Для Windows:
 
 ```bash
-python -m venv .venv
 .venv\Scripts\activate
 ```
 
@@ -253,15 +157,15 @@ pip install -r requirements.txt
 
 ---
 
-### 4. Создать `.env`
+### 4. Создать `.env` файл
 
-Создай файл `.env` в корне проекта:
+В корне проекта создай файл `.env`:
 
 ```env
 SECRET_KEY=your_secret_key
 DEBUG=True
 
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
 
 DB_NAME=financehub
@@ -276,6 +180,7 @@ DB_PORT=5432
 ### 5. Применить миграции
 
 ```bash
+python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -297,25 +202,77 @@ python manage.py runserver
 
 Приложение будет доступно по адресу:
 
-```txt
+```text
 http://127.0.0.1:8000/
 ```
 
 ---
 
-## 🐳 Запуск через Docker
+## Запуск через Docker
 
-Проект можно запустить локально через Docker: Django + PostgreSQL.
+Проект можно запустить через Docker и PostgreSQL.
 
-### 1. Создать `.env`
+### 1. Собрать и запустить контейнеры
 
-Пример `.env` для Docker:
+```bash
+docker compose up --build
+```
+
+---
+
+### 2. Применить миграции
+
+Если миграции не применились автоматически:
+
+```bash
+docker compose exec web python manage.py migrate
+```
+
+---
+
+### 3. Создать суперпользователя
+
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+---
+
+### 4. Открыть сайт
+
+```text
+http://localhost:8000/
+```
+
+---
+
+## Переменные окружения
+
+### Для локального запуска
 
 ```env
 SECRET_KEY=your_secret_key
 DEBUG=True
 
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+ALLOWED_HOSTS=localhost,127.0.0.1
+CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
+
+DB_NAME=financehub
+DB_USER=financehub_user
+DB_PASSWORD=financehub_password
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+---
+
+### Для Docker Compose
+
+```env
+SECRET_KEY=your_secret_key
+DEBUG=True
+
+ALLOWED_HOSTS=localhost,127.0.0.1
 CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
 
 DB_NAME=financehub
@@ -325,74 +282,14 @@ DB_HOST=db
 DB_PORT=5432
 ```
 
-Важно:
+---
+
+### Для Render
+
+На Render нужно добавить переменные окружения:
 
 ```env
-DB_HOST=db
-```
-
-В Docker используется имя сервиса PostgreSQL из `docker-compose.yml`.
-
----
-
-### 2. Запустить проект
-
-```bash
-docker compose up --build
-```
-
-После запуска приложение будет доступно:
-
-```txt
-http://127.0.0.1:8000/
-```
-
----
-
-### 3. Создать суперпользователя в Docker
-
-В новом терминале:
-
-```bash
-docker compose exec web python manage.py createsuperuser
-```
-
----
-
-### 4. Остановить контейнеры
-
-```bash
-docker compose down
-```
-
-Если нужно удалить базу данных Docker:
-
-```bash
-docker compose down -v
-```
-
----
-
-## 🚀 Deploy на Render
-
-Проект задеплоен на Render как **Docker Web Service**.
-
-Для production используется:
-
-- Docker;
-- Gunicorn;
-- Render PostgreSQL;
-- переменная окружения `DATABASE_URL`;
-- переменная окружения `PORT`, которую автоматически задаёт Render.
-
----
-
-### Render Environment Variables
-
-В Render Web Service нужно добавить переменные:
-
-```env
-SECRET_KEY=your_production_secret_key
+SECRET_KEY=your_secret_key
 DEBUG=False
 
 ALLOWED_HOSTS=finance-hub-00sk.onrender.com
@@ -401,207 +298,187 @@ CSRF_TRUSTED_ORIGINS=https://finance-hub-00sk.onrender.com
 DATABASE_URL=your_render_postgresql_internal_database_url
 ```
 
-Важно:
-
-```env
-DATABASE_URL=...
-```
-
-На Render **не используется**:
-
-```env
-DB_HOST=db
-```
-
-`DB_HOST=db` работает только локально в Docker Compose.
+Важно: секретные данные нельзя хранить в репозитории.
 
 ---
 
-### Dockerfile для Render
+## Деплой
 
-Контейнер запускается через Gunicorn:
+Проект задеплоен на Render с использованием Docker.
 
-```dockerfile
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT"]
-```
+Для production используются:
 
-Render сам передаёт переменную окружения `PORT`.
+- Docker
+- Gunicorn
+- PostgreSQL
+- WhiteNoise
+- Render Environment Variables
 
----
-
-### Pre-Deploy Command на Render
-
-В Render можно указать:
+Команда запуска внутри Docker:
 
 ```bash
-python manage.py migrate && python manage.py collectstatic --noinput
-```
-
-Эта команда применяет миграции и собирает static files перед запуском приложения.
-
----
-
-## 🔐 Переменные окружения
-
-В проекте используется `.env`.
-
-Пример `.env.example`:
-
-```env
-SECRET_KEY=your_secret_key_here
-DEBUG=True
-
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
-CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
-
-DB_NAME=financehub
-DB_USER=financehub_user
-DB_PASSWORD=change_me
-DB_HOST=db
-DB_PORT=5432
-
-DATABASE_URL=
-```
-
-Файл `.env` нельзя добавлять в GitHub.
-
-В `.gitignore` должно быть:
-
-```gitignore
-.env
-.venv/
-venv/
-__pycache__/
-*.pyc
-db.sqlite3
-.idea/
-.vscode/
-staticfiles/
-media/
+python manage.py migrate && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
 ---
 
-## 🐘 PostgreSQL
+## Основные модели
 
-FinanceHub использует PostgreSQL в качестве основной базы данных.
+### Category
 
-Локально через Docker используется:
+Категория операции.
 
-```env
-DB_HOST=db
-```
+Тип категории может быть:
 
-На Render используется:
-
-```env
-DATABASE_URL=...
-```
-
-Пример настройки базы данных в `settings.py`:
-
-```python
-import os
-import dj_database_url
-
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL:
-    DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": os.getenv("DB_NAME"),
-            "USER": os.getenv("DB_USER"),
-            "PASSWORD": os.getenv("DB_PASSWORD"),
-            "HOST": os.getenv("DB_HOST"),
-            "PORT": os.getenv("DB_PORT"),
-        }
-    }
-```
+- `INCOME` — доход
+- `EXPENSE` — расход
 
 ---
 
-## 📈 Dashboard
+### Transaction
 
-Пример данных на dashboard:
+Финансовая операция пользователя.
 
-```txt
-Баланс: 900 EUR
+Содержит:
 
-Доход за месяц:
-+2000 EUR
+- пользователя;
+- категорию;
+- сумму;
+- дату;
+- описание.
 
-Расход за месяц:
--1100 EUR
+---
 
-Средний чек:
-550 EUR
-```
+### Budget
 
-Dashboard также показывает:
+Лимит расходов по категории.
 
-- траты текущего месяца;
-- лимиты бюджета;
+Позволяет отслеживать, превышен ли месячный бюджет.
+
+---
+
+### SavingsGoal
+
+Цель накопления.
+
+Содержит:
+
+- название цели;
+- целевую сумму;
+- текущую сумму;
+- дедлайн;
+- процент выполнения.
+
+---
+
+## Dashboard
+
+Dashboard показывает основную финансовую информацию пользователя:
+
+- текущий баланс;
+- доходы за месяц;
+- расходы за месяц;
+- средний чек;
+- расходы по категориям;
+- динамику доходов и расходов;
+- лимиты;
 - цели накоплений;
-- динамику по месяцам;
-- визуальные графики через Chart.js.
+- финансовые инсайты.
 
 ---
 
-## 🧪 Полезные команды
+## Безопасность
 
-### Django
+В проекте используются:
+
+- CSRF-защита Django;
+- авторизация пользователей;
+- изоляция данных по пользователю;
+- переменные окружения для секретов;
+- `.env` не хранится в репозитории;
+- production-настройки для Render.
+
+---
+
+## Полезные команды
+
+### Создать миграции
+
+```bash
+python manage.py makemigrations
+```
+
+---
+
+### Применить миграции
 
 ```bash
 python manage.py migrate
-python manage.py createsuperuser
-python manage.py runserver
-python manage.py collectstatic
 ```
 
 ---
 
-### Docker
+### Создать администратора
+
+```bash
+python manage.py createsuperuser
+```
+
+---
+
+### Собрать static files
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+---
+
+### Запуск локально
+
+```bash
+python manage.py runserver
+```
+
+---
+
+### Запуск Docker
 
 ```bash
 docker compose up --build
-docker compose down
-docker compose down -v
-docker compose exec web python manage.py migrate
-docker compose exec web python manage.py createsuperuser
 ```
 
 ---
 
-### Git
+### Остановить Docker
 
 ```bash
-git add .
-git commit -m "Update project"
-git push origin main
+docker compose down
 ```
 
 ---
 
-## 🚀 Roadmap
+### Полностью пересоздать базу Docker
 
-Планируемые улучшения:
+```bash
+docker compose down -v
+docker compose up --build
+```
 
-- [ ] REST API на Django REST Framework
-- [ ] Экспорт операций в Excel
-- [ ] Экспорт отчётов в PDF
-- [ ] Email-подтверждение регистрации
-- [ ] Telegram-уведомления
-- [ ] AI-рекомендации по расходам
-- [ ] Темная тема
-- [ ] Мультивалютность
-- [ ] Улучшенная финансовая аналитика
-- [ ] Production logging
-- [ ] GitHub Actions CI/CD
+---
+
+## Планы по развитию
+
+Возможные улучшения проекта:
+
+- страница финансовых отчётов;
+- экспорт операций в CSV / Excel;
+- подтверждение email;
+- восстановление пароля;
+- повторяющиеся операции;
+- импорт банковских операций;
+- фильтры и поиск по операциям;
+- улучшенная аналитика расходов.
 
 ---
 

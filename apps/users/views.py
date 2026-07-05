@@ -4,6 +4,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 from django.db.models import Sum
+from django.shortcuts import redirect
 
 from apps.finance.models import Transaction, Budget, SavingsGoal
 

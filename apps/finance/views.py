@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Transaction, Budget, SavingsGoal
 from .forms import TransactionForm, BudgetForm, SavingsGoalForm
 from .filters import TransactionFilterForm
+from .services import get_financial_insights
 
 
 def landing(request):
@@ -67,6 +68,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             'budgets': Budget.objects.filter(user=user).select_related('category'),
             'goals': SavingsGoal.objects.filter(user=user)[:3],
             'completed_goals': completed_goals,
+            'insights': get_financial_insights(user),
         })
 
         return context

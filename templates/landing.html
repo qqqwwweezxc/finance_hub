@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,520 +12,9 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    <style>
-        :root {
-            /* User defined palette */
-            --primary: #0d6efd;
-            --primary2: #7a8eff;
-            --primary-glow: rgba(13, 110, 253, 0.4);
-            --sidebar: #10131d;
-            --text: #171b26;
-            --muted: #7e8798;
-
-        #heroChart{
-                height:150px !important;
-            }
-
-            #mainDashChart{
-                height:250px !important;
-            }
-
-            #miniPieChart{
-                height:80px !important;
-            }
-
-            /* Glassmorphism & UI variables */
-            --bg-color: #f6f8fb;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-bg-darker: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(255, 255, 255, 1);
-            --glass-shadow: 0 24px 48px rgba(13, 110, 253, 0.06);
-            --card-radius: 24px;
-            --transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        ::selection {
-            background: var(--primary2);
-            color: #fff;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
-            background-color: var(--bg-color);
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-        }
-
-        /* ----- Aurora Animated Background ----- */
-        .aurora-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            background: var(--bg-color);
-            pointer-events: none;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(70px);
-            opacity: 0.5;
-            animation: morph 20s infinite alternate ease-in-out;
-        }
-
-        .blob-1 {
-            top: -10%; left: -10%;
-            width: 600px; height: 600px;
-            background: var(--primary2);
-        }
-
-        .blob-2 {
-            top: 40%; right: -20%;
-            width: 700px; height: 700px;
-            background: var(--primary);
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            bottom: -20%; left: 20%;
-            width: 500px; height: 500px;
-            background: #b185ff;
-            opacity: 0.3;
-            animation-delay: -10s;
-        }
-
-        @keyframes morph {
-            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
-            50% { transform: translate(100px, 150px) scale(1.1) rotate(90deg); }
-            100% { transform: translate(-50px, 50px) scale(0.9) rotate(180deg); }
-        }
-
-        /* ----- Typography & Utilities ----- */
-        .text-gradient {
-            background: linear-gradient(135deg, var(--primary) 0%, #b185ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .fw-black { font-weight: 900; }
-        .ls-tight { letter-spacing: -0.03em; }
-
-        /* ----- Glassmorphism Core ----- */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--card-radius);
-            box-shadow: var(--glass-shadow);
-            position: relative;
-        }
-
-        .glass::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 100%);
-            opacity: 0.6;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .glass-hover {
-            transition: var(--transition);
-        }
-
-        .glass-hover:hover {
-            transform: translateY(-10px) scale(1.01);
-            box-shadow: 0 40px 80px rgba(13, 110, 253, 0.12);
-            background: var(--glass-bg-darker);
-            border-color: rgba(255, 255, 255, 1);
-        }
-
-        /* ----- Buttons ----- */
-        .btn-premium {
-            padding: 1rem 2.5rem;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 1.05rem;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-primary-premium {
-            background: linear-gradient(135deg, var(--primary), var(--primary2));
-            color: white;
-            border: none;
-            box-shadow: 0 12px 24px var(--primary-glow);
-        }
-
-        .btn-primary-premium::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, var(--primary2), var(--primary));
-            z-index: -1;
-            transition: var(--transition);
-            opacity: 0;
-        }
-
-        .btn-primary-premium:hover {
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 20px 32px var(--primary-glow);
-        }
-
-        .btn-primary-premium:hover::before { opacity: 1; }
-
-        .btn-outline-premium {
-            background: var(--glass-bg);
-            border: 1px solid var(--primary2);
-            color: var(--primary);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-outline-premium:hover {
-            background: rgba(255,255,255,0.9);
-            color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(13, 110, 253, 0.1);
-        }
-
-        /* ----- Navbar ----- */
-        .navbar {
-            padding: 1.5rem 0;
-            transition: var(--transition);
-        }
-
-        .navbar.scrolled {
-            padding: 1rem 0;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .nav-link {
-            font-weight: 500;
-            color: var(--text) !important;
-            margin: 0 0.5rem;
-            position: relative;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0; height: 2px;
-            bottom: 0; left: 50%;
-            background: var(--primary);
-            transition: var(--transition);
-            transform: translateX(-50%);
-        }
-
-        .nav-link:hover::after { width: 100%; }
-
-        /* ----- Hero Section ----- */
-        .hero {
-            padding: 10rem 0 6rem;
-            min-height: 100svh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            background: rgba(13, 110, 253, 0.1);
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(13, 110, 253, 0.2);
-        }
-
-        .hero-title {
-            font-size: 4.5rem;
-            line-height: 1.05;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Hero App Mockup & 3D Effect */
-        .mockup-wrapper {
-            position: relative;
-            perspective: 1000px;
-            transform-style: preserve-3d;
-        }
-
-        .app-window-main {
-            transform: rotateX(5deg) rotateY(-10deg);
-            transition: transform 0.5s ease-out;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 20px 30px 60px rgba(0, 0, 0, 0.1),
-                        -10px -10px 30px rgba(255,255,255,0.8);
-            border: 4px solid #fff;
-        }
-
-        .floating-element {
-            position: absolute;
-            z-index: 10;
-            transition: transform 0.2s ease-out;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.9);
-        }
-
-        .float-1 { top: -20px; right: -30px; transform: translateZ(50px); animation: float 6s ease-in-out infinite; }
-        .float-2 { bottom: 40px; left: -40px; transform: translateZ(80px); animation: float 7s ease-in-out infinite reverse; }
-        .float-3 { top: 45%; right: -10px; transform: translateY(-50%); animation: float 5s ease-in-out infinite 1s; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) translateZ(50px); }
-            50% { transform: translateY(-15px) translateZ(50px); }
-        }
-
-        /* ----- Features Bento Grid ----- */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-        }
-
-        .bento-item {
-            padding: 2.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .bento-item.large { grid-column: span 8; }
-        .bento-item.medium { grid-column: span 4; }
-
-        .icon-box {
-            width: 60px; height: 60px;
-            border-radius: 20px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(122, 142, 255, 0.1));
-            color: var(--primary);
-            border: 1px solid rgba(13, 110, 253, 0.15);
-        }
-
-        /* ----- Massive Dashboard Preview ----- */
-        .dash-ui {
-            border-radius: 24px;
-            overflow: hidden;
-            background: rgba(255,255,255,0.4);
-            border: 1px solid rgba(255,255,255,0.8);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.05);
-        }
-
-        .dash-header {
-            background: rgba(255,255,255,0.6);
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.5);
-            display: flex;
-            align-items: center;
-        }
-
-        .dash-dots div {
-            width: 12px; height: 12px; border-radius: 50%; margin-right: 8px;
-        }
-        .dash-sidebar {
-            background: rgba(255,255,255,0.5);
-            border-right: 1px solid rgba(255,255,255,0.4);
-            padding: 20px;
-        }
-        .dash-nav-item {
-            padding: 10px 15px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            color: var(--muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .dash-nav-item.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 12px rgba(13,110,253,0.3);
-        }
-
-        .transaction-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 15px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .transaction-item:last-child { border-bottom: none; }
-
-        .tx-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;}
-
-        /* ----- Pricing Table ----- */
-        .pricing-card {
-            padding: 3rem 2rem;
-            position: relative;
-        }
-        .pricing-card.popular {
-            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-            border: 2px solid var(--primary2);
-            transform: scale(1.05);
-            z-index: 2;
-        }
-        .popular-badge {
-            position: absolute;
-            top: -15px; left: 50%; transform: translateX(-50%);
-            background: var(--primary); color: #fff;
-            padding: 5px 20px; border-radius: 50px;
-            font-size: 0.85rem; font-weight: 700;
-            box-shadow: 0 4px 15px rgba(13,110,253,0.4);
-        }
-
-        /* ----- Marquee Brands ----- */
-        .brand-marquee {
-            overflow: hidden;
-            white-space: nowrap;
-            position: relative;
-            padding: 2rem 0;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .brand-marquee::before, .brand-marquee::after {
-            content: ''; position: absolute; top: 0; width: 150px; height: 100%; z-index: 2;
-        }
-        .brand-marquee::before { left: 0; background: linear-gradient(to right, var(--bg-color), transparent); }
-        .brand-marquee::after { right: 0; background: linear-gradient(to left, var(--bg-color), transparent); }
-
-        .marquee-content {
-            display: inline-block;
-            animation: scroll 30s linear infinite;
-        }
-        .marquee-content span {
-            font-size: 1.5rem; font-weight: 700; color: var(--muted);
-            margin: 0 3rem; opacity: 0.5; transition: 0.3s;
-        }
-        .marquee-content span:hover { opacity: 1; color: var(--primary); }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-
-        /* ----- Animations ----- */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .delay-100 { transition-delay: 0.1s; }
-        .delay-200 { transition-delay: 0.2s; }
-        .delay-300 { transition-delay: 0.3s; }
-
-        /* Responsive */
-        @media (max-width: 991px) {
-            .hero-title { font-size: 3.2rem; }
-            .hero { padding-top: 8rem; text-align: center; }
-            .bento-item.large, .bento-item.medium { grid-column: span 12; }
-            .app-window-main { transform: none !important; margin-top: 3rem; }
-            .floating-element { display: none; }
-            .pricing-card.popular { transform: none; }
-        }
-        @media (max-width: 576px) {
-            .hero-title { font-size: 2.5rem; }
-            .btn-premium { width: 100%; margin-bottom: 10px; }
-        }
-
-        .max-w-75{
-            max-width:75%;
-        }
-
-        .max-w-1000{
-            max-width:1000px;
-        }
-
-        .sidebar-panel{
-
-        background:
-        linear-gradient(
-        180deg,
-        #02091d,
-        #01040f
-        );
-
-        min-height:100%;
-        padding:30px;
-        }
-
-        .sidebar-menu{
-
-        display:flex;
-        flex-direction:column;
-        gap:25px;
-        }
-
-        .sidebar-item{
-
-        display:flex;
-        align-items:center;
-        gap:15px;
-
-        padding:18px;
-
-        border-radius:20px;
-
-        color:#fff;
-
-        cursor:pointer;
-
-        transition:.3s;
-        }
-
-        .sidebar-item:hover{
-
-        background:rgba(255,255,255,.1);
-
-        }
-
-        .sidebar-item.active{
-
-        background:#386bff;
-
-        box-shadow:
-        0 15px 40px
-        rgba(56,107,255,.5);
-        }
-
-        .dashboard-content{
-
-        background:
-        rgba(255,255,255,.6);
-
-        }
-
-        .stat-card{
-
-        padding:25px;
-        border-top:4px solid #7a8eff;
-        }
-
-        canvas{
-
-        height:250px!important;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
+<body class="landing-page">
 
     <div class="aurora-bg">
         <div class="blob blob-1"></div>
@@ -593,7 +83,7 @@
                         </div>
 
                         <div class="glass floating-element float-1 p-3 d-flex align-items-center gap-3 bg-white rounded-pill">
-                            <div class="rounded-circle bg-success bg-opacity-10 text-success p-2 d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
+                            <div class="rounded-circle bg-success bg-opacity-10 text-success p-2 d-flex align-items-center justify-content-center landing-floating-income-icon">
                                 <i class="bi bi-arrow-down-left fw-bold fs-5"></i>
                             </div>
                             <div>
@@ -665,9 +155,9 @@
             <div class="dash-ui reveal delay-200">
                 <div class="dash-header">
                     <div class="dash-dots d-flex">
-                        <div style="background: #ff5f56;"></div>
-                        <div style="background: #ffbd2e;"></div>
-                        <div style="background: #27c93f;"></div>
+                        <div class="dash-dot-red"></div>
+                        <div class="dash-dot-yellow"></div>
+                        <div class="dash-dot-green"></div>
                     </div>
                     <div class="mx-auto text-muted small fw-semibold bg-light px-4 py-1 rounded-pill border">app.financehub.com</div>
                 </div>
@@ -701,15 +191,15 @@
                             </div>
 
                             <div class="col-xl-4 d-flex flex-column gap-4">
-                                <div class="glass p-4 bg-dark text-white" style="border-radius: 20px; background: linear-gradient(135deg, #10131d, #1a2035);">
+                                <div class="glass p-4 bg-dark text-white landing-card-preview">
                                     <div class="text-white-50 small mb-1">Total Balance</div>
                                     <h2 class="fw-black mb-4">€ 24,500.00</h2>
                                     <div class="d-flex justify-content-between text-white-50 small mb-1">
                                         <span>**** **** **** 4092</span>
                                         <span>12/28</span>
                                     </div>
-                                    <div class="progress bg-white bg-opacity-25" style="height: 4px;">
-                                        <div class="progress-bar bg-white" style="width: 40%"></div>
+                                    <div class="progress bg-white bg-opacity-25 landing-mini-progress">
+                                        <div class="progress-bar bg-white landing-mini-progress-fill"></div>
                                     </div>
                                 </div>
 
@@ -720,7 +210,7 @@
                                             <div class="tx-icon bg-danger bg-opacity-10 text-danger"><i class="bi bi-apple"></i></div>
                                             <div>
                                                 <div class="fw-bold small">Apple Store</div>
-                                                <div class="text-muted" style="font-size: 0.75rem;">Электроника</div>
+                                                <div class="text-muted landing-small-muted">Электроника</div>
                                             </div>
                                         </div>
                                         <div class="fw-bold small">- €999.00</div>
@@ -730,7 +220,7 @@
                                             <div class="tx-icon bg-success bg-opacity-10 text-success"><i class="bi bi-briefcase-fill"></i></div>
                                             <div>
                                                 <div class="fw-bold small">Upwork Inc.</div>
-                                                <div class="text-muted" style="font-size: 0.75rem;">Зачисление</div>
+                                                <div class="text-muted landing-small-muted">Зачисление</div>
                                             </div>
                                         </div>
                                         <div class="fw-bold small text-success">+ €3,200.00</div>
@@ -740,7 +230,7 @@
                                             <div class="tx-icon bg-warning bg-opacity-10 text-warning"><i class="bi bi-cup-hot-fill"></i></div>
                                             <div>
                                                 <div class="fw-bold small">Starbucks</div>
-                                                <div class="text-muted" style="font-size: 0.75rem;">Кафе</div>
+                                                <div class="text-muted landing-small-muted">Кафе</div>
                                             </div>
                                         </div>
                                         <div class="fw-bold small">- €5.40</div>
@@ -755,8 +245,8 @@
     </section>
     <section class="py-5 mb-5 reveal">
         <div class="container">
-            <div class="glass p-5 text-center position-relative overflow-hidden" style="border-radius: 30px; background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5));">
-                <div class="position-absolute top-50 start-50 translate-middle w-100 h-100" style="background: radial-gradient(circle, rgba(13,110,253,0.1) 0%, transparent 70%); z-index: 0;"></div>
+            <div class="glass p-5 text-center position-relative overflow-hidden landing-cta">
+                <div class="position-absolute top-50 start-50 translate-middle w-100 h-100 landing-cta-bg"></div>
 
                 <div class="position-relative z-1 py-5">
                     <h2 class="display-4 fw-black ls-tight mb-4">Готовы взять деньги <br>под контроль?</h2>
@@ -777,9 +267,9 @@
                     </a>
                     <p class="text-muted pe-lg-5">Премиальный сервис для умного управления личными финансами, бюджетирования и аналитики. Создано для тех, кто ценит свое время и деньги.</p>
                     <div class="d-flex gap-3 mt-4">
-                        <a href="#" class="btn btn-light rounded-circle shadow-sm" style="width:40px; height:40px; line-height: 26px;"><i class="bi bi-twitter-x"></i></a>
-                        <a href="#" class="btn btn-light rounded-circle shadow-sm" style="width:40px; height:40px; line-height: 26px;"><i class="bi bi-github"></i></a>
-                        <a href="#" class="btn btn-light rounded-circle shadow-sm" style="width:40px; height:40px; line-height: 26px;"><i class="bi bi-discord"></i></a>
+                        <a href="#" class="btn btn-light rounded-circle shadow-sm landing-social-btn"><i class="bi bi-twitter-x"></i></a>
+                        <a href="#" class="btn btn-light rounded-circle shadow-sm landing-social-btn"><i class="bi bi-github"></i></a>
+                        <a href="#" class="btn btn-light rounded-circle shadow-sm landing-social-btn"><i class="bi bi-discord"></i></a>
                     </div>
                 </div>
                 <div class="col-6 col-lg-2 offset-lg-1">

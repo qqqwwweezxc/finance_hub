@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<section class="category-create-section">
+    <div class="category-create-card">
+
+        <div class="category-create-top">
+            <a
+                href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'finance:transaction_create' %}{% endif %}"
+                class="category-back-link"
+            >
+                ← Назад
+            </a>
+        </div>
+
+        <div class="category-create-icon">
+            <span>✨</span>
+        </div>
+
+        <div class="category-create-header">
+            <h1>Новая категория</h1>
+            <p>
+                Создайте свою категорию для доходов или расходов.
+                Она будет доступна только вам.
+            </p>
+        </div>
+
+        <form method="post" class="category-create-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="category-form-alert">
+                    {{ form.non_field_errors.0 }}
+                </div>
+            {% endif %}
+
+            <div class="category-form-group">
+                <label class="category-form-label">
+                    Название категории
+                </label>
+
+                <div class="category-input-wrapper">
+                    <span class="category-input-icon">🏷️</span>
+
+                    {% render_field form.name class="category-form-control category-name-input" %}
+                </div>
+
+                {% if form.name.errors %}
+                    <div class="category-form-error">
+                        {{ form.name.errors.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="category-form-group">
+                <label class="category-form-label">
+                    Тип категории
+                </label>
+
+                <div class="category-type-grid">
+                    {% render_field form.type class="category-form-control category-select" %}
+                </div>
+
+                {% if form.type.errors %}
+                    <div class="category-form-error">
+                        {{ form.type.errors.0 }}
+                    </div>
+                {% endif %}
+
+                <div class="category-help-text">
+                    Выберите, будет ли эта категория использоваться для доходов или расходов.
+                </div>
+            </div>
+
+            <div class="category-preview-box">
+                <div class="category-preview-icon">
+                    💡
+                </div>
+
+                <div>
+                    <strong>Совет</strong>
+                    <p>
+                        Делайте категории простыми: “Продукты”, “Такси”, “Подписки”, “Фриланс”.
+                        Так аналитика будет понятнее.
+                    </p>
+                </div>
+            </div>
+
+            <div class="category-form-actions">
+                <button type="submit" class="category-submit-btn">
+                    <span>Создать категорию</span>
+                    <span>→</span>
+                </button>
+
+                <a
+                    href="{% if request.GET.next %}{{ request.GET.next }}{% else %}{% url 'finance:transaction_create' %}{% endif %}"
+                    class="category-cancel-btn"
+                >
+                    Отмена
+                </a>
+            </div>
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

@@ -1,454 +1,127 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+
 {% block title %}История операций | FinanceHub{% endblock %}
+{% block body_class %}page-transaction-list{% endblock %}
 
 {% block content %}
-
-<style>
-
-:root{
---bg:#f5f7fb;
---card:rgba(255,255,255,.85);
---text:#111827;
---muted:#6b7280;
-
---primary:#4f46e5;
---success:#10b981;
---danger:#ef4444;
-
---shadow:0 10px 35px rgba(0,0,0,.06);
---shadow-hover:0 18px 45px rgba(0,0,0,.08);
-}
-
-body{
-background:
-radial-gradient(circle at top right,#dbeafe 0%,transparent 30%),
-radial-gradient(circle at bottom left,#ede9fe 0%,transparent 35%),
-var(--bg);
-}
-
-.glass-card{
-
-border:none;
-border-radius:24px;
-
-background:var(--card);
-
-backdrop-filter:blur(16px);
--webkit-backdrop-filter:blur(16px);
-
-box-shadow:var(--shadow);
-
-overflow:hidden;
-
-transition:.35s;
-}
-
-.glass-card:hover{
-box-shadow:var(--shadow-hover);
-}
-
-.page-title{
-font-weight:800;
-letter-spacing:-0.5px;
-color:var(--text);
-}
-
-.form-label{
-
-font-size:.72rem;
-font-weight:700;
-letter-spacing:1px;
-
-color:var(--muted);
-
-margin-bottom:6px!important;
-}
-
-.form-control,
-.form-select{
-
-border-radius:14px!important;
-border:1px solid rgba(0,0,0,.08);
-
-padding:.65rem .9rem;
-
-transition:.3s;
-}
-
-.form-control:focus,
-.form-select:focus{
-
-border-color:var(--primary);
-
-box-shadow:
-0 0 0 .25rem rgba(79,70,229,.15);
-
-}
-
-.btn-success{
-
-background:
-linear-gradient(
-135deg,
-#10b981,
-#34d399
-);
-
-border:none;
-border-radius:14px;
-
-font-weight:700;
-
-padding:10px 16px;
-}
-
-.btn-dark{
-
-border-radius:12px;
-font-weight:600;
-}
-
-.btn-outline-secondary,
-.btn-outline-primary,
-.btn-outline-danger{
-
-border-radius:12px;
-}
-
-.table{
-
-margin:0;
-}
-
-.table thead th{
-
-font-size:.78rem;
-letter-spacing:1px;
-
-color:var(--muted);
-
-font-weight:700;
-
-padding:18px;
-
-border:none;
-}
-
-.table tbody td{
-
-padding:18px;
-
-border-top:1px solid rgba(0,0,0,.05);
-
-vertical-align:middle;
-}
-
-.table tbody tr{
-
-transition:.3s;
-}
-
-.table tbody tr:hover{
-
-background:rgba(99,102,241,.03);
-
-}
-
-.tx-badge{
-
-padding:.55rem .8rem;
-
-border-radius:30px;
-
-font-size:.75rem;
-font-weight:600;
-}
-
-.income-badge{
-
-background:rgba(16,185,129,.08);
-color:var(--success);
-
-border:1px solid rgba(16,185,129,.2);
-}
-
-.expense-badge{
-
-background:rgba(107,114,128,.08);
-color:#374151;
-
-border:1px solid rgba(107,114,128,.2);
-}
-
-.action-btn{
-
-transition:.3s;
-}
-
-.action-btn:hover{
-
-transform:translateY(-2px);
-
-}
-
-.empty-state{
-
-padding:60px 20px;
-}
-
-.empty-icon{
-
-font-size:2rem;
-opacity:.6;
-}
-
-@media(max-width:768px){
-
-.table{
-font-size:.85rem;
-}
-
-.page-title{
-font-size:1.5rem;
-}
-
-}
-
-</style>
-
-
 <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="m-0 page-title">
+            Финансовые операции
+        </h2>
+        <small class="text-muted">
+            История доходов и расходов
+        </small>
+    </div>
 
-<div>
-
-<h2 class="m-0 page-title">
-Финансовые операции
-</h2>
-
-<small class="text-muted">
-История доходов и расходов
-</small>
-
+    <a href="{% url 'finance:transaction_create' %}" class="btn btn-success">
+        + Операция
+    </a>
 </div>
-
-<a href="{% url 'finance:transaction_create' %}"
-
-class="btn btn-success">
-
-+ Операция
-
-</a>
-
-</div>
-
 
 <div class="glass-card p-4 mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">
+                ТИП
+            </label>
+            {% render_field filter_form.type class="form-select" %}
+        </div>
 
-<form method="get" class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label">
+                КАТЕГОРИЯ
+            </label>
+            {% render_field filter_form.category class="form-select" %}
+        </div>
 
-<div class="col-md-3">
+        <div class="col-md-2">
+            <label class="form-label">
+                ПЕРИОД С
+            </label>
+            {% render_field filter_form.date_from class="form-control" %}
+        </div>
 
-<label class="form-label">
+        <div class="col-md-2">
+            <label class="form-label">
+                ПО
+            </label>
+            {% render_field filter_form.date_to class="form-control" %}
+        </div>
 
-ТИП
-
-</label>
-
-{% render_field filter_form.type class="form-select" %}
-
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-dark w-100">
+                Фильтр
+            </button>
+            <a href="{% url 'finance:transaction_list' %}" class="btn btn-outline-secondary">
+                ↺
+            </a>
+        </div>
+    </form>
 </div>
-
-
-<div class="col-md-3">
-
-<label class="form-label">
-
-КАТЕГОРИЯ
-
-</label>
-
-{% render_field filter_form.category class="form-select" %}
-
-</div>
-
-
-<div class="col-md-2">
-
-<label class="form-label">
-
-ПЕРИОД С
-
-</label>
-
-{% render_field filter_form.date_from class="form-control" %}
-
-</div>
-
-
-<div class="col-md-2">
-
-<label class="form-label">
-
-ПО
-
-</label>
-
-{% render_field filter_form.date_to class="form-control" %}
-
-</div>
-
-
-<div class="col-md-2 d-flex gap-2">
-
-<button type="submit"
-
-class="btn btn-dark w-100">
-
-Фильтр
-
-</button>
-
-<a href="{% url 'finance:transaction_list' %}"
-
-class="btn btn-outline-secondary">
-
-↺
-
-</a>
-
-</div>
-
-</form>
-
-</div>
-
 
 <div class="glass-card">
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Категория</th>
+                    <th>Описание</th>
+                    <th>Сумма</th>
+                    <th class="text-end">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                    <tr>
+                        <td>
+                            {{ tx.date|date:"d.m.Y" }}
+                        </td>
+                        <td>
+                            <span class="tx-badge {% if tx.category.type == 'INCOME' %}income-badge{% else %}expense-badge{% endif %}">
+                                {{ tx.category.name }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ tx.description|default:"—" }}
+                        </td>
+                        <td class="fw-bold {% if tx.category.type == 'INCOME' %}text-success{% else %}text-danger{% endif %}">
+                            {% if tx.category.type == 'INCOME' %}
+                                +
+                            {% else %}
+                                -
+                            {% endif %}
+                            {{ tx.amount }} {{ request.user.currency }}
+                        </td>
+                        <td class="text-end">
+                            <a href="{% url 'finance:transaction_update' tx.id %}" class="btn btn-sm btn-outline-primary action-btn">
+                                Ред
+                            </a>
 
-<div class="table-responsive">
-
-<table class="table align-middle">
-
-<thead>
-
-<tr>
-
-<th>Дата</th>
-<th>Категория</th>
-<th>Описание</th>
-<th>Сумма</th>
-<th class="text-end">Действия</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for tx in transactions %}
-
-<tr>
-
-<td>
-
-{{ tx.date|date:"d.m.Y" }}
-
-</td>
-
-
-<td>
-
-<span class="tx-badge {% if tx.category.type == 'INCOME' %}income-badge{% else %}expense-badge{% endif %}">
-
-{{ tx.category.name }}
-
-</span>
-
-</td>
-
-
-<td>
-
-{{ tx.description|default:"—" }}
-
-</td>
-
-
-<td class="fw-bold {% if tx.category.type == 'INCOME' %}text-success{% else %}text-danger{% endif %}">
-
-{% if tx.category.type == 'INCOME' %}
-+
-{% else %}
--
-{% endif %}
-
-{{ tx.amount }}
-
-</td>
-
-
-<td class="text-end">
-
-<a href="{% url 'finance:transaction_update' tx.id %}"
-
-class="btn btn-sm btn-outline-primary action-btn">
-
-Ред
-
-</a>
-
-
-<form action="{% url 'finance:transaction_delete' tx.id %}"
-
-method="post"
-
-class="d-inline">
-
-{% csrf_token %}
-
-<button type="submit"
-
-class="btn btn-sm btn-outline-danger action-btn">
-
-✕
-
-</button>
-
-</form>
-
-</td>
-
-</tr>
-
-{% empty %}
-
-<tr>
-
-<td colspan="5" class="text-center empty-state">
-
-<div class="empty-icon mb-2">
-📊
+                            <form action="{% url 'finance:transaction_delete' tx.id %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger action-btn">
+                                    ✕
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center empty-state">
+                            <div class="empty-icon mb-2">
+                                📊
+                            </div>
+                            <div class="text-muted">
+                                Записи не найдены
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<div class="text-muted">
-
-Записи не найдены
-
-</div>
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
 {% endblock %}

@@ -1,19 +1,22 @@
+from datetime import date, datetime, timedelta
 from decimal import Decimal
-from django.db.models import Sum, Count, Avg, Q
-from django.db.models.functions import TruncMonth
+from django.db.models import Sum, Count, Avg, Q, F
+from django.db.models.functions import TruncMonth, TruncWeek, TruncYear
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 
 
-from .models import Transaction, Budget, SavingsGoal
-from .forms import TransactionForm, BudgetForm, SavingsGoalForm
+from .models import Transaction, Budget, SavingsGoal, Category
+from .forms import TransactionForm, BudgetForm, SavingsGoalForm, CategoryForm
 from .filters import TransactionFilterForm
 from .services import get_financial_insights
+from .charts import build_chart_data
 
 
 def landing(request):
@@ -148,34 +151,43 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
         return Transaction.objects.filter(user=self.request.user)
 
 
-@login_required
-def chart_data_api(request):
-    """Эндпоинт генерации JSON-датасетов для Chart.js"""
-    user = request.user
+class CategoryCreateView(LoginRequiredMixin, CreateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "finance/category_form.html"
 
-    now = timezone.now()
-    cats = Transaction.objects.filter(
-        user=user, category__type='EXPENSE', date__year=now.year, date__month=now.month
-    ).values('category__name').annotate(total=Sum('amount')).order_by('-total')
+    def get_safe_next_url(self):
+        next_url = self.request.GET.get("next")
 
-    months = Transaction.objects.filter(user=user).annotate(
-        month=TruncMonth('date')
-    ).values('month').annotate(
-        inc=Sum('amount', filter=Q(category__type='INCOME')),
-        exp=Sum('amount', filter=Q(category__type='EXPENSE')),
-    ).order_by('month')
+        if next_url and url_has_allowed_host_and_scheme(
+            url=next_url,
+            allowed_hosts={self.request.get_host()},
+            require_https=self.request.is_secure(),
+        ):
+            return next_url
 
-    return JsonResponse({
-        'categories': {
-            'labels':[c['category__name'] for c in cats],
-            'data':[float(c['total']) for c in cats],
-        },
-        'dynamics': {
-            'labels': [m['month'].strftime('%m.%Y') for m in months],
-            'income': [float(m['inc'] or 0) for m in months],
-            'expense': [float(m['exp'] or 0) for m in months],
-        }
-    })
+        return None
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category_back_url"] = (
+            self.get_safe_next_url()
+            or reverse_lazy('finance:transaction_create')
+        )
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.get_safe_next_url() or reverse_lazy('finance:transaction_create')
+
 
 class BudgetCreateView(CreateView):
     model = Budget
@@ -246,3 +258,13 @@ def delete_goal(request, pk):
 
     return redirect('finance:dashboard')
 
+
+@login_required
+def chart_data_api(request):
+    """Эндпоинт генерации JSON-датасетов для Chart.js"""
+    data = build_chart_data(
+        user=request.user,
+        params=request.GET,
+    )
+
+    return JsonResponse(data)

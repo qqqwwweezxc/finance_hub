@@ -1,182 +1,87 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
+
 {% block title %}Регистрация | FinanceHub{% endblock %}
+{% block body_class %}page-register{% endblock %}
 
 {% block content %}
 
-<style>
-
-:root{
-    --primary:#4f46e5;
-    --bg:#f5f7fb;
-    --text:#111827;
-    --muted:#6b7280;
-}
-
-.register-wrapper{
-    min-height:calc(100vh - 120px);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:40px 15px;
-}
-
-.register-card{
-    width:100%;
-    max-width:520px;
-
-    border:none;
-    border-radius:28px;
-
-    background:rgba(255,255,255,.78);
-    backdrop-filter:blur(18px);
-
-    box-shadow:0 25px 70px rgba(0,0,0,.08);
-
-    padding:34px;
-
-    transition:.4s;
-}
-
-.register-card:hover{
-    transform:translateY(-6px);
-}
-
-.hero-icon{
-    width:75px;
-    height:75px;
-
-    margin:auto;
-    margin-bottom:15px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:50%;
-
-    font-size:1.8rem;
-
-    color:white;
-
-    background:linear-gradient(135deg,#4f46e5,#818cf8);
-
-    box-shadow:0 10px 25px rgba(79,70,229,.25);
-}
-
-.title{
-    text-align:center;
-    font-weight:800;
-    color:var(--text);
-    margin-bottom:5px;
-}
-
-.subtitle{
-    text-align:center;
-    font-size:.9rem;
-    color:var(--muted);
-    margin-bottom:25px;
-}
-
-.form-label{
-    font-size:.72rem;
-    font-weight:700;
-    letter-spacing:1px;
-    color:var(--muted);
-}
-
-.form-control{
-    border-radius:14px !important;
-    border:1px solid rgba(0,0,0,.08);
-    padding:.75rem 1rem;
-    transition:.3s;
-}
-
-.form-control:focus{
-    border-color:var(--primary);
-    box-shadow:0 0 0 .25rem rgba(79,70,229,.15);
-}
-
-.btn-primary{
-    border:none;
-    border-radius:14px;
-    font-weight:700;
-    padding:12px;
-
-    width:100%;
-
-    background:linear-gradient(135deg,#4f46e5,#818cf8);
-
-    transition:.3s;
-}
-
-.btn-primary:hover{
-    transform:translateY(-2px);
-}
-
-.error-text{
-    font-size:.8rem;
-    color:#ef4444;
-    margin-top:5px;
-}
-
-@media(max-width:768px){
-    .register-card{
-        padding:24px;
-    }
-}
-
-</style>
-
-
 <div class="register-wrapper">
 
-<div class="register-card">
+    <div class="register-card">
 
-<div class="hero-icon">
-✨
-</div>
+        <div class="hero-icon">
+            ✨
+        </div>
 
-<h3 class="title">
-Новый аккаунт
-</h3>
+        <h3 class="title">
+            Новый аккаунт
+        </h3>
 
-<p class="subtitle">
-Создайте FinanceHub аккаунт и начните контролировать финансы
-</p>
+        <p class="subtitle">
+            Создайте FinanceHub аккаунт и начните контролировать финансы
+        </p>
 
+        <form method="post" class="register-form" novalidate>
+            {% csrf_token %}
 
-<form method="post">
-{% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="form-alert">
+                    <div class="form-alert-icon">!</div>
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
 
-{% for field in form %}
+            {% for field in form %}
 
-<div class="mb-3">
+                <div class="register-field">
 
-<label class="form-label">
-{{ field.label }}
-</label>
+                    <label class="form-label" for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
 
-{% render_field field class="form-control" %}
+                    {% if field.errors %}
+                        {% render_field field class="form-control register-input input-error" %}
+                    {% else %}
+                        {% render_field field class="form-control register-input" %}
+                    {% endif %}
 
-{% if field.errors %}
-<div class="error-text">
-{{ field.errors.0 }}
-</div>
-{% endif %}
+                    {% if field.errors %}
+                        <div class="error-box">
+                            <div class="error-icon">!</div>
 
-</div>
+                            <div class="error-content">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
 
-{% endfor %}
+                </div>
 
+            {% endfor %}
 
-<button type="submit" class="btn btn-primary mt-2">
-Зарегистрироваться
-</button>
+            <button type="submit" class="register-submit-btn">
+                Зарегистрироваться
+                <span>→</span>
+            </button>
 
-</form>
+            <div class="login-divider">
+                <span>Уже есть аккаунт?</span>
+            </div>
 
-</div>
+            <a href="{% url 'users:login' %}" class="login-link-btn">
+                Войти
+            </a>
+
+        </form>
+
+    </div>
 
 </div>
 

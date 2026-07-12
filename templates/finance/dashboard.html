@@ -1,271 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Сводка | FinanceHub{% endblock %}
+{% block body_class %}page-dashboard{% endblock %}
 
 {% block content %}
-
-<style>
-:root{
-    --bg:#f5f7fb;
-    --card:#ffffffd8;
-    --border:rgba(255,255,255,.25);
-    --shadow:0 10px 35px rgba(15,23,42,.08);
-    --shadow-hover:0 20px 50px rgba(15,23,42,.12);
-
-    --primary:#4f46e5;
-    --success:#10b981;
-    --danger:#ef4444;
-    --info:#0ea5e9;
-
-    --text:#111827;
-    --muted:#6b7280;
-}
-
-body{
-    background:
-    radial-gradient(circle at top right,#dbeafe 0%,transparent 25%),
-    radial-gradient(circle at bottom left,#ede9fe 0%,transparent 30%),
-    var(--bg);
-}
-
-.dashboard-title{
-    font-weight:700;
-    letter-spacing:-0.5px;
-    color:var(--text);
-}
-
-.stat-card{
-    border:none !important;
-    border-radius:24px;
-    background:var(--card)!important;
-    backdrop-filter:blur(16px);
-    -webkit-backdrop-filter:blur(16px);
-
-    box-shadow:var(--shadow);
-    transition:.35s ease;
-    overflow:hidden;
-    position:relative;
-}
-
-.stat-card:hover{
-    transform:translateY(-6px);
-    box-shadow:var(--shadow-hover);
-}
-
-.stat-card::before{
-    content:"";
-    position:absolute;
-    top:0;
-    left:0;
-    height:4px;
-    width:100%;
-    opacity:.9;
-}
-
-.border-primary::before{
-    background:linear-gradient(90deg,#4f46e5,#818cf8);
-}
-
-.border-success::before{
-    background:linear-gradient(90deg,#10b981,#34d399);
-}
-
-.border-danger::before{
-    background:linear-gradient(90deg,#ef4444,#fb7185);
-}
-
-.border-info::before{
-    background:linear-gradient(90deg,#06b6d4,#38bdf8);
-}
-
-.stat-card small{
-    color:var(--muted)!important;
-    letter-spacing:1px;
-    font-size:.72rem;
-}
-
-.stat-card h3{
-    color:var(--text);
-    font-size:1.8rem;
-}
-
-.btn-primary{
-    border:none;
-    border-radius:14px;
-    background:linear-gradient(135deg,#4f46e5,#6366f1);
-    padding:12px 18px;
-    font-weight:600;
-    transition:.3s;
-}
-
-.btn-primary:hover{
-    transform:translateY(-2px);
-}
-
-.btn-outline-primary{
-    border-radius:12px;
-    border:1px solid rgba(79,70,229,.25);
-    color:var(--primary);
-    transition:.3s;
-}
-
-.btn-outline-primary:hover{
-    transform:scale(1.08);
-    background:var(--primary);
-}
-
-h5{
-    font-weight:700;
-    color:var(--text);
-}
-
-.progress{
-    height:10px !important;
-    border-radius:50px;
-    overflow:hidden;
-    background:#eef2ff;
-}
-
-.progress-bar{
-    border-radius:50px;
-}
-
-.edit-link{
-    opacity:.6;
-    transition:.3s;
-}
-
-.edit-link:hover{
-    opacity:1;
-    transform:scale(1.15);
-}
-
-.section-card{
-    padding:24px !important;
-}
-
-canvas{
-    padding:10px;
-}
-
-.delete-btn{
-    border:none;
-    background:transparent;
-    padding:0;
-    margin-left:2px;
-    opacity:.6;
-    transition:.3s;
-    line-height:1;
-}
-
-.delete-btn:hover{
-    opacity:1;
-    transform:scale(1.15);
-}
-
-.modal-content{
-    background:rgba(255,255,255,.92);
-    backdrop-filter:blur(20px);
-    border:none;
-    border-radius:24px;
-    box-shadow:0 30px 80px rgba(15,23,42,.25);
-}
-
-.delete-modal-icon{
-    width:72px;
-    height:72px;
-    border-radius:50%;
-    background:#fee2e2;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:0 auto;
-    font-size:34px;
-}
-
-@media(max-width:768px){
-
-    .dashboard-title{
-        font-size:1.4rem;
-    }
-
-    .top-header{
-        gap:15px;
-        flex-direction:column;
-        align-items:flex-start!important;
-    }
-
-    .stat-card h3{
-        font-size:1.4rem;
-    }
-}
-
-.insight-badge{
-    padding:6px 12px;
-    border-radius:999px;
-    font-size:.75rem;
-    font-weight:700;
-    color:#4f46e5;
-    background:rgba(79,70,229,.1);
-    border:1px solid rgba(79,70,229,.15);
-}
-
-.insight-card{
-    height:100%;
-    display:flex;
-    gap:14px;
-    align-items:flex-start;
-
-    padding:18px;
-
-    border-radius:18px;
-
-    background:rgba(255,255,255,.65);
-
-    border:1px solid rgba(255,255,255,.7);
-
-    box-shadow:0 10px 25px rgba(15,23,42,.05);
-
-    transition:.3s ease;
-}
-
-.insight-card:hover{
-    transform:translateY(-4px);
-    box-shadow:0 18px 40px rgba(15,23,42,.08);
-}
-
-.insight-icon{
-    width:44px;
-    height:44px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:14px;
-
-    font-size:22px;
-
-    flex-shrink:0;
-}
-
-.insight-success .insight-icon{
-    background:#dcfce7;
-}
-
-.insight-danger .insight-icon{
-    background:#fee2e2;
-}
-
-.insight-warning .insight-icon{
-    background:#fef3c7;
-}
-
-.insight-info .insight-icon{
-    background:#e0f2fe;
-}
-</style>
-
-
 <div class="d-flex justify-content-between align-items-center mb-4 pb-2 top-header">
 
     <div>
@@ -302,7 +39,7 @@ canvas{
             <small>Доход за месяц</small>
 
             <h3 class="my-2 fw-bold text-success">
-                +{{ month_income }}
+                +{{ month_income }} {{ request.user.currency }}
             </h3>
         </div>
     </div>
@@ -312,7 +49,7 @@ canvas{
             <small>Расход за месяц</small>
 
             <h3 class="my-2 fw-bold text-danger">
-                -{{ month_expense }}
+                -{{ month_expense }} {{ request.user.currency }}
             </h3>
         </div>
     </div>
@@ -322,7 +59,7 @@ canvas{
             <small>Средний чек</small>
 
             <h3 class="my-2 fw-bold">
-                {{ avg_expanse|floatformat:1 }}
+                {{ avg_expanse|floatformat:1 }} {{ request.user.currency }}
             </h3>
         </div>
     </div>
@@ -392,11 +129,34 @@ canvas{
 
         <div class="card stat-card section-card mb-4">
 
-            <h5 class="mb-4">
-                Траты текущего месяца
-            </h5>
+            <div class="chart-card-header mb-4">
+                <div>
+                    <h5 class="m-0">
+                        Траты за период
+                    </h5>
 
-            <div style="height:250px;">
+                    <small class="text-muted" id="catChartCaption">
+                        По категориям за текущий месяц
+                    </small>
+                </div>
+
+                <div class="chart-period-tabs" data-period-group="categories">
+                    <button type="button" class="chart-period-btn" data-period="day" aria-pressed="false">
+                        День
+                    </button>
+                    <button type="button" class="chart-period-btn" data-period="week" aria-pressed="false">
+                        Неделя
+                    </button>
+                    <button type="button" class="chart-period-btn active" data-period="month" aria-pressed="true">
+                        Месяц
+                    </button>
+                    <button type="button" class="chart-period-btn" data-period="year" aria-pressed="false">
+                        Год
+                    </button>
+                </div>
+            </div>
+
+            <div class="chart-box">
                 <canvas id="catChart"></canvas>
             </div>
 
@@ -424,41 +184,43 @@ canvas{
 
                     <div class="mb-4">
 
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="finance-list-row mb-2">
 
-                            <div class="d-flex align-items-center gap-2 fw-semibold">
+                            <div class="finance-list-title fw-semibold">
 
                                 <span>
                                     {{ b.category.name }}
                                 </span>
 
+                            </div>
+
+                            <span class="finance-list-amount {% if b.is_exceeded %}text-danger{% endif %}">
+                                {{ b.current_spent|floatformat:0 }}
+                                /
+                                {{ b.limit_amount|floatformat:0 }}
+                            </span>
+
+                            <div class="finance-list-actions">
                                 <a href="{% url 'finance:budget-update' b.pk %}"
-                                   class="text-muted text-decoration-none edit-link">
+                                   class="btn btn-sm btn-outline-primary action-link">
                                     ✏️
                                 </a>
 
                                 <button
                                     type="button"
-                                    class="delete-btn"
+                                    class="btn btn-sm btn-outline-danger action-link"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteBudget{{ b.id }}">
                                     🗑️
                                 </button>
-
                             </div>
-
-                            <span class="{% if b.is_exceeded %}text-danger{% endif %}">
-                                {{ b.current_spent|floatformat:0 }}
-                                /
-                                {{ b.limit_amount|floatformat:0 }}
-                            </span>
 
                         </div>
 
                         <div class="progress">
 
                             <div class="progress-bar {% if b.is_exceeded %}bg-danger{% else %}bg-success{% endif %}"
-                                 style="width:{% widthratio b.current_spent b.limit_amount 100 %}%">
+                                 data-progress-width="{% widthratio b.current_spent b.limit_amount 100 %}">
                             </div>
 
                         </div>
@@ -484,11 +246,34 @@ canvas{
 
         <div class="card stat-card section-card mb-4">
 
-            <h5 class="mb-4">
-                Динамика по месяцам
-            </h5>
+            <div class="chart-card-header mb-4">
+                <div>
+                    <h5 class="m-0">
+                        Динамика
+                    </h5>
 
-            <div style="height:250px;">
+                    <small class="text-muted" id="dynChartCaption">
+                        Доходы и расходы по месяцам
+                    </small>
+                </div>
+
+                <div class="chart-period-tabs" data-period-group="dynamics">
+                    <button type="button" class="chart-period-btn" data-period="day" aria-pressed="false">
+                        Дни
+                    </button>
+                    <button type="button" class="chart-period-btn" data-period="week" aria-pressed="false">
+                        Недели
+                    </button>
+                    <button type="button" class="chart-period-btn active" data-period="month" aria-pressed="true">
+                        Месяцы
+                    </button>
+                    <button type="button" class="chart-period-btn" data-period="year" aria-pressed="false">
+                        Годы
+                    </button>
+                </div>
+            </div>
+
+            <div class="chart-box">
                 <canvas id="dynChart"></canvas>
             </div>
 
@@ -516,9 +301,9 @@ canvas{
 
                     <div class="mb-4">
 
-                        <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="finance-list-row mb-2">
 
-                            <div class="d-flex align-items-center gap-2">
+                            <div class="finance-list-title">
 
                                 <span class="fw-semibold">
 
@@ -530,31 +315,33 @@ canvas{
 
                                 </span>
 
+                            </div>
+
+                            <span class="finance-list-amount fw-semibold">
+                                {{ s.progress_percent }}%
+                            </span>
+
+                            <div class="finance-list-actions">
                                 <a href="{% url 'finance:savings-update' s.pk %}"
-                                   class="edit-link text-decoration-none">
+                                   class="btn btn-sm btn-outline-primary action-link">
                                     ✏️
                                 </a>
 
                                 <button
                                     type="button"
-                                    class="delete-btn"
+                                    class="btn btn-sm btn-outline-danger action-link"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteGoal{{ s.id }}">
                                     🗑️
                                 </button>
-
                             </div>
-
-                            <span class="fw-semibold">
-                                {{ s.progress_percent }}%
-                            </span>
 
                         </div>
 
                         <div class="progress">
 
                             <div class="progress-bar bg-info"
-                                 style="width:{{ s.progress_percent }}%">
+                                 data-progress-width="{{ s.progress_percent }}">
                             </div>
 
                         </div>
@@ -723,8 +510,7 @@ canvas{
 
             <div class="modal-body text-center p-5">
 
-                <div class="delete-modal-icon"
-                     style="background:#dcfce7;">
+                <div class="delete-modal-icon success-modal-icon">
 
                     🎉
 
@@ -769,6 +555,10 @@ canvas{
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+    document.querySelectorAll("[data-progress-width]").forEach((bar) => {
+        bar.style.width = `${bar.dataset.progressWidth}%`;
+    });
+
     {% if completed_goals %}
         const completedModalEl = document.getElementById("completedGoalModal");
 
@@ -778,59 +568,122 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     {% endif %}
 
-    fetch("{% url 'finance:api_chart_data' %}")
-        .then(r => r.json())
-        .then(data => {
+    const chartDataUrl = "{% url 'finance:api_chart_data' %}";
+    const chartState = {
+        categories: "month",
+        dynamics: "month",
+    };
+    const dynamicPeriodLabels = {
+        day: "по дням",
+        week: "по неделям",
+        month: "по месяцам",
+        year: "по годам",
+    };
+    let catChart = null;
+    let dynChart = null;
 
-            new Chart(document.getElementById('catChart'), {
-                type:'doughnut',
-                data:{
-                    labels:data.categories.labels,
-                    datasets:[{
-                        data:data.categories.data,
-                        backgroundColor:[
-                            '#4f46e5',
-                            '#10b981',
-                            '#ef4444',
-                            '#0ea5e9',
-                            '#f59e0b',
-                            '#8b5cf6'
-                        ],
-                        borderWidth:0
-                    }]
-                },
-                options:{
-                    maintainAspectRatio:false,
-                    cutout:'70%'
-                }
+    const updatePeriodButtons = (group) => {
+        document
+            .querySelectorAll(`[data-period-group="${group}"] .chart-period-btn`)
+            .forEach((button) => {
+                const isActive = button.dataset.period === chartState[group];
+                button.classList.toggle("active", isActive);
+                button.setAttribute("aria-pressed", isActive ? "true" : "false");
             });
+    };
 
-            new Chart(document.getElementById('dynChart'), {
-                type:'bar',
-                data:{
-                    labels:data.dynamics.labels,
-                    datasets:[
-                        {
-                            label:'Доходы',
-                            data:data.dynamics.income,
-                            backgroundColor:'#10b981',
-                            borderRadius:10
-                        },
-                        {
-                            label:'Расходы',
-                            data:data.dynamics.expense,
-                            backgroundColor:'#ef4444',
-                            borderRadius:10
-                        }
-                    ]
-                },
-                options:{
-                    maintainAspectRatio:false
-                }
-            });
-
+    const loadCharts = () => {
+        const params = new URLSearchParams({
+            categories_period: chartState.categories,
+            dynamics_period: chartState.dynamics,
         });
 
+        fetch(`${chartDataUrl}?${params.toString()}`)
+            .then((response) => response.json())
+            .then((data) => {
+                const catCaption = document.getElementById("catChartCaption");
+                const dynCaption = document.getElementById("dynChartCaption");
+
+                if (catCaption) {
+                    catCaption.textContent = `По категориям ${data.categories.scope_label}`;
+                }
+
+                if (dynCaption) {
+                    dynCaption.textContent = `Доходы и расходы ${dynamicPeriodLabels[data.dynamics.period]}`;
+                }
+
+                if (catChart) {
+                    catChart.data.labels = data.categories.labels;
+                    catChart.data.datasets[0].data = data.categories.data;
+                    catChart.update();
+                } else {
+                    catChart = new Chart(document.getElementById("catChart"), {
+                        type: "doughnut",
+                        data: {
+                            labels: data.categories.labels,
+                            datasets: [{
+                                data: data.categories.data,
+                                backgroundColor: [
+                                    "#4f46e5",
+                                    "#10b981",
+                                    "#ef4444",
+                                    "#0ea5e9",
+                                    "#f59e0b",
+                                    "#8b5cf6",
+                                ],
+                                borderWidth: 0,
+                            }],
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                            cutout: "70%",
+                        },
+                    });
+                }
+
+                if (dynChart) {
+                    dynChart.data.labels = data.dynamics.labels;
+                    dynChart.data.datasets[0].data = data.dynamics.income;
+                    dynChart.data.datasets[1].data = data.dynamics.expense;
+                    dynChart.update();
+                } else {
+                    dynChart = new Chart(document.getElementById("dynChart"), {
+                        type: "bar",
+                        data: {
+                            labels: data.dynamics.labels,
+                            datasets: [
+                                {
+                                    label: "Доходы",
+                                    data: data.dynamics.income,
+                                    backgroundColor: "#10b981",
+                                    borderRadius: 10,
+                                },
+                                {
+                                    label: "Расходы",
+                                    data: data.dynamics.expense,
+                                    backgroundColor: "#ef4444",
+                                    borderRadius: 10,
+                                },
+                            ],
+                        },
+                        options: {
+                            maintainAspectRatio: false,
+                        },
+                    });
+                }
+            });
+    };
+
+    document.querySelectorAll(".chart-period-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+            const group = button.closest("[data-period-group]").dataset.periodGroup;
+            chartState[group] = button.dataset.period;
+            updatePeriodButtons(group);
+            loadCharts();
+        });
+    });
+
+    loadCharts();
 });
 </script>
 {% endblock %}

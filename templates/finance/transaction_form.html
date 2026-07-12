@@ -1,127 +1,9 @@
 {% extends 'base.html' %}
 {% load widget_tweaks %}
 {% block title %}Операция | FinanceHub{% endblock %}
+{% block body_class %}page-transaction-form{% endblock %}
 
 {% block content %}
-
-<style>
-
-:root{
-    --primary:#4f46e5;
-    --success:#10b981;
-    --bg:#f5f7fb;
-    --text:#111827;
-    --muted:#6b7280;
-}
-
-.tx-wrapper{
-    display:flex;
-    justify-content:center;
-    padding:40px 15px;
-}
-
-.tx-card{
-    width:100%;
-    max-width:560px;
-
-    border:none;
-    border-radius:28px;
-
-    background:rgba(255,255,255,.78);
-    backdrop-filter:blur(18px);
-
-    box-shadow:0 25px 70px rgba(0,0,0,.08);
-
-    padding:32px;
-
-    transition:.4s;
-}
-
-.tx-card:hover{
-    transform:translateY(-6px);
-}
-
-.tx-title{
-    font-weight:800;
-    color:var(--text);
-    margin-bottom:20px;
-    letter-spacing:-.5px;
-}
-
-.form-label{
-    font-size:.72rem;
-    font-weight:700;
-    letter-spacing:1px;
-    color:var(--muted);
-}
-
-.form-control,
-.form-select{
-    border-radius:14px !important;
-    border:1px solid rgba(0,0,0,.08);
-    padding:.75rem 1rem;
-    transition:.3s;
-}
-
-.form-control:focus,
-.form-select:focus{
-    border-color:var(--primary);
-    box-shadow:0 0 0 .25rem rgba(79,70,229,.15);
-}
-
-.btn-primary{
-    border:none;
-    border-radius:14px;
-    font-weight:700;
-    padding:12px;
-    background:linear-gradient(135deg,#4f46e5,#818cf8);
-    transition:.3s;
-}
-
-.btn-primary:hover{
-    transform:translateY(-2px);
-}
-
-.btn-light{
-    border-radius:14px;
-}
-
-.icon-badge{
-    width:60px;
-    height:60px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:50%;
-
-    background:linear-gradient(135deg,#4f46e5,#818cf8);
-
-    color:white;
-
-    font-size:1.5rem;
-
-    margin-bottom:10px;
-
-    box-shadow:0 10px 25px rgba(79,70,229,.25);
-}
-
-.helper-text{
-    font-size:.85rem;
-    color:var(--muted);
-    margin-bottom:25px;
-}
-
-@media(max-width:768px){
-    .tx-card{
-        padding:22px;
-    }
-}
-
-</style>
-
-
 <div class="tx-wrapper">
 
 <div class="tx-card">
@@ -144,17 +26,28 @@
 
 
 <form method="post">
-{% csrf_token %}
+    {% csrf_token %}
 
-<div class="mb-3">
+    <div class="mb-3">
+        <label class="form-label">
+            КАТЕГОРИЯ
+        </label>
 
-<label class="form-label">
-КАТЕГОРИЯ
-</label>
+        <div class="d-flex gap-2 align-items-center">
+            {% render_field form.category class="form-select" %}
 
-{% render_field form.category class="form-select" %}
+            <a href="{% url 'finance:category_create' %}?next={{ request.get_full_path|urlencode }}"
+               class="btn btn-outline-primary tx-add-category-btn">
+                + Добавить категорию
+            </a>
+        </div>
 
-</div>
+        {% if form.category.errors %}
+            <div class="text-danger small mt-1">
+                {{ form.category.errors.0 }}
+            </div>
+        {% endif %}
+    </div>
 
 
 <div class="mb-3">

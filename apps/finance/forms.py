@@ -69,3 +69,55 @@ class SavingsGoalForm(BootstrapFormMixin, forms.ModelForm):
             'target_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
             'current_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '1'}),
         }
+
+
+class CategoryForm(BootstrapFormMixin, forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ["name", "type"]
+        labels = {
+            "name": "Название",
+            "type": "Тип категории",
+        }
+        widgets = {
+            "name": forms.TextInput(
+                attrs={
+                    "autocomplete": "off",
+                }
+            ),
+            "type": forms.Select(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({"class": "form-control"})
+        self.fields["type"].widget.attrs.update({"class": "form-select"})
+        self.fields["type"].choices = [
+            ("", "Выберите тип"),
+            ("INCOME", "Доход"),
+            ("EXPENSE", "Расход"),
+        ]
+
+    def clean_name(self):
+        return self.cleaned_data.get("name", "").strip()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get("name")
+        category_type = cleaned_data.get("type")
+
+        if self.user and name and category_type:
+            queryset = Category.objects.filter(
+                user=self.user,
+                name__iexact=name,
+                type=category_type,
+            )
+
+            if self.instance.pk:
+                queryset = queryset.exclude(pk=self.instance.pk)
+
+            if queryset.exists():
+                self.add_error("name", "Такая категория уже есть.")
+
+        return cleaned_data
